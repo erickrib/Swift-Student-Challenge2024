@@ -20,6 +20,7 @@ struct ComputerInterface: View {
                     SelectCodesView()
                 }
             }
+            .frame(width: SCENE_SIZE.width * 0.95, height: SCENE_SIZE.height * 0.84)
             .background(.clear)
 
         }

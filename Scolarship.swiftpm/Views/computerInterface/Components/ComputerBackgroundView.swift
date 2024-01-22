@@ -12,7 +12,11 @@ struct ComputerBackgroundView: View {
         Image("modalBackground")
             .resizable()
             .scaledToFill()
-            .frame(width: SCENE_SIZE.width * 0.95, height: SCENE_SIZE.height * 0.8)
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .overlay(
+                RoundedRectangle(cornerRadius: 25)
+                    .stroke(Color.black, lineWidth: 2)
+            )
     }
 }
 

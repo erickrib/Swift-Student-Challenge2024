@@ -13,10 +13,11 @@ struct SelectCodesView: View {
             Image("backgroundListCode")
                 .resizable()
                 .scaledToFill()
-                .frame(width: SCENE_SIZE.width * 0.43, height: SCENE_SIZE.height * 0.77)
             
             HStack{
+                
                 VStack{
+                    
                     HStack(spacing: 15) {
                         Button(action: {
                             // Ação do primeiro botão
@@ -42,20 +43,85 @@ struct SelectCodesView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                         }
                     }
+                    .padding(.horizontal, 10)
+                    .padding(.top, 25)
+                    .padding(.bottom, 10)
                     
                     Divider()
+                        .frame(height: 1)
+                        .overlay(.pink)
                     
                     Text("Click on the codes to add them to your algorithm:")
+                        .padding(.vertical, 25.0)
+                    
+                    ScrollView {
+                        ExecutableCardCodeView()
+                        ExecutableCardCodeView()
+                        ExecutableCardCodeView()
+                        ExecutableCardCodeView()
+                        ExecutableCardCodeView()
+                        ExecutableCardCodeView()
+                    }
                     
                 }
                 
-                VStack{
+                ZStack{
                     Image("selectSectorBackground")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: SCENE_SIZE.width * 0.082, height: SCENE_SIZE.width * 0.43)
-                }
+                    
+                    VStack{
+                        Button(action: {
+                            
+                        }){
+                            Image("selectSector")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.vertical, 10.0)
+                                .padding(.horizontal, 15.0)
+                        }
+                        Button(action: {
+                            
+                        }){
+                            Image("selectSector")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.vertical, 10.0)
+                                .padding(.horizontal, 15.0)
+                        }
+                        Button(action: {
+                            
+                        }){
+                            Image("selectSector")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.vertical, 10.0)
+                                .padding(.horizontal, 15.0)
+                        }
+                        Button(action: {
+                            
+                        }){
+                            Image("selectSector")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.vertical, 10.0)
+                                .padding(.horizontal, 15.0)
+                        }
+                        Button(action: {
+                            
+                        }){
+                            Image("selectSector")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.vertical, 10.0)
+                                .padding(.horizontal, 15.0)
+                        }
+                    }
+                    
+                }.frame(width: SCENE_SIZE.width * 0.082)
+                
             }
+            
         }
         .frame(width: SCENE_SIZE.width * 0.43, height: SCENE_SIZE.height * 0.77)
     }

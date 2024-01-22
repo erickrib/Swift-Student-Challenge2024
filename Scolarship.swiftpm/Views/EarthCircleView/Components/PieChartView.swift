@@ -60,7 +60,7 @@ struct PieChartView: View {
                 .stroke(Color.white, lineWidth: 2)
                 .frame(width: 152, height: 152)
             
-            Text("350 CO2")
+            Text("350 CO\u{2082}")
                 .font(.system(size: 18))
                 .padding(.bottom, 0)
             
