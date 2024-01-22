@@ -8,6 +8,8 @@
 import SpriteKit
 
 class HUDLayer: SKNode {
+    
+    weak var delegate: ModalPresenter?
 
     init(screenSize: CGSize) {
         super.init()
@@ -15,6 +17,7 @@ class HUDLayer: SKNode {
         createComputerButton(size: screenSize)
         createGoalCO2Rectangle(size: screenSize)
         createQuestionButton(size: screenSize)
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -26,8 +29,7 @@ class HUDLayer: SKNode {
     private func createComputerButton(size: CGSize) {
         let computerButton = SKSpriteNode(imageNamed: "computer")
         computerButton.position = CGPoint(x: size.width * 0.88, y: size.height * 0.13)
-        computerButton.name = "bottomButton"
-        computerButton.isUserInteractionEnabled = true
+        computerButton.name = "computerButton"
         computerButton.scale(to: autoScale(computerButton, widthProportion: 0.10, screenSize: SCENE_SIZE))
 
 //        let scaleUp = SKAction.scale(to: 1.2, duration: 1.0)
@@ -46,7 +48,6 @@ class HUDLayer: SKNode {
         let rectangleNode = SKNode()
 
         let rectangle = SKShapeNode(rect: CGRect(x: 0, y: 0, width: size.width * 0.15, height: 41), cornerRadius: 10)
-        rectangle.isUserInteractionEnabled = true
         rectangle.fillColor = .purple
         rectangleNode.position = CGPoint(x: size.width * 0.2, y: size.height - 70)
 
@@ -94,20 +95,5 @@ class HUDLayer: SKNode {
 
         questionButton.addChild(questionMarkLabel)
         addChild(questionButton)
-    }
-
-
-    // MARK: - Touch Handling
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let touchLocation = touch.location(in: self)
-
-        if let node = nodes(at: touchLocation).first {
-            if node.name == "bottomButton" {
-                
-            } else if node.name == "questionButton" {
-                
-            }
-        }
     }
 }

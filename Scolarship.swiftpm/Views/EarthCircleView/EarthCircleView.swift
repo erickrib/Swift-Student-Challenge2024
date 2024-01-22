@@ -16,8 +16,15 @@ struct EarthCircleView: View {
         GeometryReader { proxy in
             
             ZStack {
+                
                 SpriteView(scene: earthCircleViewModel.getScene(size: proxy.size))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                if earthCircleViewModel.showingSheet {
+                    ComputerInterface(onClose: {
+                                            earthCircleViewModel.showingSheet.toggle()
+                                        })
+                }
             }
             .onAppear {
                 print(proxy.size)

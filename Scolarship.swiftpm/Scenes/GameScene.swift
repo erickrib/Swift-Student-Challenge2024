@@ -8,6 +8,10 @@
 import SpriteKit
 import SwiftUI
 
+protocol ModalPresenter: AnyObject {
+    func showCustomModal()
+}
+
 class GameScene: SKScene {
     
     var atmosphereBackground: SKSpriteNode {
@@ -31,8 +35,16 @@ class GameScene: SKScene {
         return image
     }()
     
-    @State private var isComputerInterfaceVisible = false
+    lazy var blackOverlay: SKSpriteNode = {
+        let overlay = SKSpriteNode(color: .black, size: CGSize(width: SCENE_SIZE.width, height: SCENE_SIZE.height))
+        overlay.alpha = 0.5
+        overlay.position = CGPoint(x: SCENE_SIZE.width / 2, y:  SCENE_SIZE.height/2)
+        overlay.name = "overlay"
+        return overlay
+    }()
     
+    var viewModel: EarthCircleViewModel?
+
     override func didMove(to view: SKView) {
         
         addChild(atmosphereBackground)
@@ -90,27 +102,18 @@ class GameScene: SKScene {
         return cloudBackground
     }
     
-    private func showCustomModal() {
-        isComputerInterfaceVisible.toggle()
-    }
-    
-    func setupModal() {
-        let modalView = ComputerInterface()
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
         
-        let modalController = UIHostingController(rootView: modalView)
-        modalController.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        if let skView = self.view {
-            skView.addSubview(modalController.view)
-            
-            NSLayoutConstraint.activate([
-                modalController.view.centerXAnchor.constraint(equalTo: skView.centerXAnchor),
-                modalController.view.centerYAnchor.constraint(equalTo: skView.centerYAnchor),
-                modalController.view.widthAnchor.constraint(equalTo: skView.widthAnchor, multiplier: 0.95),
-                modalController.view.heightAnchor.constraint(equalTo: skView.heightAnchor, multiplier: 0.8)
-            ])
-            
-            modalController.view.isHidden = !isComputerInterfaceVisible
+        if let node = nodes(at: location).first {
+            if node.name == "computerButton" {
+                viewModel?.showingSheet.toggle()
+            } else if node.name == "questionButton" {
+                
+            } else if node.name == "overlay" {
+           
+            }
         }
     }
 }
