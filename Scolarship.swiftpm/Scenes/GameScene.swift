@@ -108,7 +108,7 @@ class GameScene: SKScene {
         
         if let node = nodes(at: location).first {
             if node.name == "computerButton" {
-                viewModel?.showingSheet.toggle()
+                viewModel?.isComputerInterfaceVisible.toggle()
             } else if node.name == "questionButton" {
                 
             } else if node.name == "overlay" {

@@ -17,7 +17,7 @@ struct ComputerInterface: View {
                 ComputerBackgroundView()
                 HStack(spacing: 10){
                     CodeEditorView()
-                    SelectCodesView()
+                    SelectCodesView(onClose: onClose)
                 }
             }
             .frame(width: SCENE_SIZE.width * 0.95, height: SCENE_SIZE.height * 0.84)
@@ -30,7 +30,7 @@ struct ComputerInterface: View {
             .opacity(0.5)
             .edgesIgnoringSafeArea(.all)
             .onTapGesture {
-                onClose() // Fecha o modal ao clicar fora dele
+                onClose()
             }
         )
     }

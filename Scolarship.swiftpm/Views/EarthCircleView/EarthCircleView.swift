@@ -20,10 +20,19 @@ struct EarthCircleView: View {
                 SpriteView(scene: earthCircleViewModel.getScene(size: proxy.size))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                if earthCircleViewModel.showingSheet {
+                if earthCircleViewModel.isComputerInterfaceVisible {
                     ComputerInterface(onClose: {
-                                            earthCircleViewModel.showingSheet.toggle()
-                                        })
+                        earthCircleViewModel.isComputerInterfaceVisible.toggle()
+                        earthCircleViewModel.isExecutionResult = true
+                        
+                        return Void()
+                    })
+                }
+                
+                if earthCircleViewModel.isExecutionResult {
+                    ExecutionResultView(onClose: {
+                        earthCircleViewModel.isExecutionResult.toggle()
+                    })
                 }
             }
             .onAppear {

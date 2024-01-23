@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SelectCodesView: View {
+    
+    var onClose: () -> Void?
+    
     var body: some View {
         ZStack{
             Image("backgroundListCode")
@@ -71,6 +74,17 @@ struct SelectCodesView: View {
                         .scaledToFill()
                     
                     VStack{
+                        
+                        Button(action: {
+                            onClose()
+                        }) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                        }
+                        .frame(width: 20, height: 20)
+                        .padding(.leading, 40)
+                        .padding(.bottom, 30)
+                        
                         Button(action: {
                             
                         }){
@@ -125,8 +139,4 @@ struct SelectCodesView: View {
         }
         .frame(width: SCENE_SIZE.width * 0.43, height: SCENE_SIZE.height * 0.77)
     }
-}
-
-#Preview {
-    SelectCodesView()
 }

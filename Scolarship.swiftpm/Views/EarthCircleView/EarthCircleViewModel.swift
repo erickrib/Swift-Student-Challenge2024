@@ -10,7 +10,10 @@ import SpriteKit
 
 class EarthCircleViewModel: ObservableObject {
     let scene:GameScene = GameScene()
-    @Published var showingSheet = false
+    
+    @Published var isComputerInterfaceVisible = false
+    @Published var isExecutionResult = false
+
     
     func getScene(size: CGSize) -> SKScene {
         scene.size = size
