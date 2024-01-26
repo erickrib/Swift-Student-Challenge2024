@@ -9,12 +9,22 @@ import SwiftUI
 
 struct ComputerInterface: View {
     
+    @StateObject var codeEditorViewModel: CodeEditorViewModel = CodeEditorViewModel()
+
     var onClose: () -> Void?
     
     var body: some View {
         ZStack{
             ZStack {
-                ComputerBackgroundView()
+                Image("modalBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(Color.black, lineWidth: 2)
+                    )
+                
                 HStack(spacing: 10){
                     CodeEditorView()
                     SelectCodesView(onClose: onClose)
@@ -33,6 +43,7 @@ struct ComputerInterface: View {
                 onClose()
             }
         )
+        .environmentObject(codeEditorViewModel)
     }
 }
 

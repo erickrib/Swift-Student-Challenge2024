@@ -11,6 +11,7 @@ import SpriteKit
 struct EarthCircleView: View {
     
     @StateObject var earthCircleViewModel = EarthCircleViewModel()
+    @StateObject var emissionSectorManager: EmissionSectorManager = EmissionSectorManager(strategy: IndustrySector())
     
     var body: some View {
         GeometryReader { proxy in
@@ -39,6 +40,7 @@ struct EarthCircleView: View {
                 print(proxy.size)
                 SCENE_SIZE = proxy.size
             }
+            .environmentObject(emissionSectorManager)
         }
         .ignoresSafeArea()
     }

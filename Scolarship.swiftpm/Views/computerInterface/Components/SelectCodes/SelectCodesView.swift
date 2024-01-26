@@ -9,6 +9,9 @@ import SwiftUI
 
 struct SelectCodesView: View {
     
+    @EnvironmentObject var codeEditorViewModel: CodeEditorViewModel
+    @EnvironmentObject var emissionSectorManager: EmissionSectorManager
+    
     var onClose: () -> Void?
     
     var body: some View {
@@ -23,8 +26,7 @@ struct SelectCodesView: View {
                     
                     HStack(spacing: 15) {
                         Button(action: {
-                            // Ação do primeiro botão
-                            print("Botão 1 pressionado!")
+                            codeEditorViewModel.addLine()
                         }) {
                             Text("New line")
                                 .padding(.horizontal, 60)
@@ -35,8 +37,7 @@ struct SelectCodesView: View {
                         }
                         
                         Button(action: {
-                            // Ação do segundo botão
-                            print("Botão 2 pressionado!")
+                            codeEditorViewModel.removeLine()
                         }) {
                             Text("Remove")
                                 .padding(.horizontal, 60)
@@ -58,12 +59,10 @@ struct SelectCodesView: View {
                         .padding(.vertical, 25.0)
                     
                     ScrollView {
-                        ExecutableCardCodeView()
-                        ExecutableCardCodeView()
-                        ExecutableCardCodeView()
-                        ExecutableCardCodeView()
-                        ExecutableCardCodeView()
-                        ExecutableCardCodeView()
+                        
+                        ForEach(emissionSectorManager.getSector(), id: \.self.id) { sector in
+                            ExecutableCardCodeView()
+                        }
                     }
                     
                 }

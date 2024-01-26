@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CodeEditorView: View {
+    
+    @EnvironmentObject var codeEditorViewModel: CodeEditorViewModel
+    
     var body: some View {
         ZStack{
             Image("codeEditor")
@@ -49,16 +52,57 @@ struct CodeEditorView: View {
                 }
                 .padding([.top], 25)
                 
-                Text("testandoFuncao()")
-                    .font(.system(size: 26))
-                    .foregroundColor(Color.white)
-
+                VStack(alignment: .leading, spacing: 0){
+                    ForEach(0..<codeEditorViewModel.codeLines.count, id: \.self) { index in
+                        HStack(spacing: 0){
+                            Text(codeEditorViewModel.codeLines[index])
+                                .font(.system(size: 28))
+                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 2))
+                            
+                            if codeEditorViewModel.selectedLineIndex == index {
+                                CursorView()
+                            }
+                            
+                            Spacer()
+                        }
+                        .background(codeEditorViewModel.selectedLineIndex == index ? Color.blue.opacity(0.3) : Color.clear)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            handleLineSelection(index: index)
+                        }
+                    }
+                }
+                
                 Spacer()
             }
             .padding([.leading, .trailing], 20)
             .frame(maxHeight: .infinity)
         }
         .frame(width: SCENE_SIZE.width * 0.49, height: SCENE_SIZE.height * 0.77)
+    }
+    
+    private func handleLineSelection(index: Int) {
+        codeEditorViewModel.selectedLineIndex = index
+        codeEditorViewModel.codeLines = codeEditorViewModel.codeLines.filter { !$0.isEmpty }
+    }
+}
+
+struct CursorView: View {
+    
+    @State private var opacity: Double = 1.0
+    
+    var body: some View {
+        Rectangle()
+            .frame(width: 2, height: 27)
+            .background(Color.black)
+            .opacity(opacity)
+            .onAppear {
+                withAnimation(Animation.easeInOut(duration: 0.6).repeatForever()) {
+                    self.opacity = self.opacity == 0 ? 1 : 0
+                }
+                
+            }
+            .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 8))
     }
 }
 
