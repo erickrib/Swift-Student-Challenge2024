@@ -59,9 +59,12 @@ struct SelectCodesView: View {
                         .padding(.vertical, 25.0)
                     
                     ScrollView {
-                        
-                        ForEach(emissionSectorManager.getSector(), id: \.self.id) { sector in
-                            ExecutableCardCodeView()
+                        ForEach(emissionSectorManager.getSector().sustainableActionFunction) { function in
+                            ExecutableCardCodeView(sustainableActionFunction: function, disable: codeEditorViewModel.ecopoints < function.costEcoPoints)
+                                .onTapGesture {
+                                    codeEditorViewModel.addFunction(action: function)
+                                }
+                                .disabled(codeEditorViewModel.ecopoints < function.costEcoPoints)
                         }
                     }
                     
@@ -84,50 +87,16 @@ struct SelectCodesView: View {
                         .padding(.leading, 40)
                         .padding(.bottom, 30)
                         
-                        Button(action: {
-                            
-                        }){
-                            Image("selectSector")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 10.0)
-                                .padding(.horizontal, 15.0)
-                        }
-                        Button(action: {
-                            
-                        }){
-                            Image("selectSector")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 10.0)
-                                .padding(.horizontal, 15.0)
-                        }
-                        Button(action: {
-                            
-                        }){
-                            Image("selectSector")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 10.0)
-                                .padding(.horizontal, 15.0)
-                        }
-                        Button(action: {
-                            
-                        }){
-                            Image("selectSector")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 10.0)
-                                .padding(.horizontal, 15.0)
-                        }
-                        Button(action: {
-                            
-                        }){
-                            Image("selectSector")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 10.0)
-                                .padding(.horizontal, 15.0)
+                        ForEach(SectorInstance.allCases, id: \.self){ sector in 
+                            Button(action: {
+                                emissionSectorManager.strategy = sector.getInstance()
+                            }){
+                                Image(sector.getInstance().configure().iconName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(.vertical, 10.0)
+                                    .padding(.horizontal, 15.0)
+                            }
                         }
                     }
                     

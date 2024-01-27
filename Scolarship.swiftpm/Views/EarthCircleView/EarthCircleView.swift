@@ -11,7 +11,7 @@ import SpriteKit
 struct EarthCircleView: View {
     
     @StateObject var earthCircleViewModel = EarthCircleViewModel()
-    @StateObject var emissionSectorManager: EmissionSectorManager = EmissionSectorManager(strategy: IndustrySector())
+    @StateObject var emissionSectorManager: EmissionSectorManager = EmissionSectorManager(strategy: SectorInstance.industry.getInstance())
     
     var body: some View {
         GeometryReader { proxy in

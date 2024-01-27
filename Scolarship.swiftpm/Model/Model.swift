@@ -14,7 +14,7 @@ struct CO2Status {
     var goal: Double = 350
 }
 
-struct EmissionSectors {
+struct EmissionSectors:Identifiable {
     var id: UUID = UUID()
     
     var name:String
@@ -26,7 +26,9 @@ struct EmissionSectors {
     var sustainableActionFunction: [SustainableActionFunction]
 }
 
-struct SustainableActionFunction {
+struct SustainableActionFunction:Identifiable, Equatable {
+    var id: UUID = UUID()
+
     var code: String
     var description: String
     var co2ReductionValue: Double

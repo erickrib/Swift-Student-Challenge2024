@@ -44,7 +44,7 @@ struct CodeEditorView: View {
                             .resizable()
                             .frame(width: 25, height: 25)
                         
-                        Text("30")
+                        Text("\(codeEditorViewModel.ecopoints)")
                             .foregroundColor(Color.black)
                     }
                     .padding(.all, 10.0)
@@ -55,7 +55,7 @@ struct CodeEditorView: View {
                 VStack(alignment: .leading, spacing: 0){
                     ForEach(0..<codeEditorViewModel.codeLines.count, id: \.self) { index in
                         HStack(spacing: 0){
-                            Text(codeEditorViewModel.codeLines[index])
+                            Text(codeEditorViewModel.codeLines[index].code)
                                 .font(.system(size: 28))
                                 .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 2))
                             
@@ -82,8 +82,12 @@ struct CodeEditorView: View {
     }
     
     private func handleLineSelection(index: Int) {
-        codeEditorViewModel.selectedLineIndex = index
-        codeEditorViewModel.codeLines = codeEditorViewModel.codeLines.filter { !$0.isEmpty }
+        codeEditorViewModel.codeLines = codeEditorViewModel.codeLines.filter { !$0.code.isEmpty }
+        if index >= codeEditorViewModel.codeLines.count{
+            codeEditorViewModel.selectedLineIndex = index - 1
+        } else {
+            codeEditorViewModel.selectedLineIndex = index
+        }
     }
 }
 

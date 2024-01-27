@@ -8,26 +8,30 @@
 import SwiftUI
 
 struct ExecutableCardCodeView: View {
+    
+    var sustainableActionFunction: SustainableActionFunction
+    var disable:Bool
+    
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: 5)
-                .fill(.white)
-            
+                .fill(disable ? Color.blue : Color.white)
+
             VStack(alignment: .trailing){
                 HStack{
-                    Text("TestandoFunção()")
+                    Text(sustainableActionFunction.code)
                         .padding(.bottom, 5.0)
                     Spacer()
                     HStack{
                         Image(systemName: "leaf.fill")
-                        Text("8")
+                        Text("\(sustainableActionFunction.costEcoPoints)")
                             .padding(.trailing, 10.0)
                     }
                 }
-                Text("Colaborar com fornecedores que adotam práticas sustentáveis, garantindo uma cadeia de suprimentos mais verde.")
+                Text(sustainableActionFunction.description)
                     .font(.system(size: 14))
                 
-                Text("-10 CO\u{2082}")
+                Text("-\(sustainableActionFunction.co2ReductionValue) CO\u{2082}")
                     .font(.system(size: 14))
                     .padding(.trailing, 10.0)
 
@@ -40,8 +44,4 @@ struct ExecutableCardCodeView: View {
         .padding([.leading, .bottom], 10.0)
         .padding(.trailing, 15.0)
     }
-}
-
-#Preview {
-    ExecutableCardCodeView()
 }
