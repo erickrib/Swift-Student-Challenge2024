@@ -21,7 +21,7 @@ struct EmissionSectors:Identifiable {
     var iconName:String
     var colorName:String
     
-    var emissions: Double
+    var percentageEmission: Double
     var absorption: Double
     var sustainableActionFunction: [SustainableActionFunction]
 }

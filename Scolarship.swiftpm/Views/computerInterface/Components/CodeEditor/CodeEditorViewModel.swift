@@ -14,7 +14,7 @@ class CodeEditorViewModel: ObservableObject {
     @Published var selectedLineIndex: Int?
     
     @Published var ecopoints: Int = 30
-
+    var earthCircleViewModel: EarthCircleViewModel?
     
     func addFunction(action:SustainableActionFunction) {
         
@@ -61,7 +61,7 @@ class CodeEditorViewModel: ObservableObject {
         
         if let index = selectedLineIndex {
             ecopoints += codeLines[index].costEcoPoints
-
+            
             codeLines.remove(at: index)
             selectedLineIndex = index == 0 && codeLines.isEmpty ? nil : max(0, index - 1)
             
@@ -69,5 +69,15 @@ class CodeEditorViewModel: ObservableObject {
             ecopoints += codeLines[codeLines.count - 1].costEcoPoints
             codeLines.remove(at: codeLines.count - 1)
         }
+    }
+    
+    func runCode() {
+        var co2Reduction:Double = 0
+        
+        for sustainableFunction in codeLines {
+            co2Reduction += sustainableFunction.co2ReductionValue
+        }
+        
+        earthCircleViewModel?.changeCO2Status(value: co2Reduction)
     }
 }

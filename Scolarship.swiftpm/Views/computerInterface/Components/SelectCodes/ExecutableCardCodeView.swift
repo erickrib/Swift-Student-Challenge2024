@@ -31,7 +31,7 @@ struct ExecutableCardCodeView: View {
                 Text(sustainableActionFunction.description)
                     .font(.system(size: 14))
                 
-                Text("-\(sustainableActionFunction.co2ReductionValue) CO\u{2082}")
+                Text("-\(Int(sustainableActionFunction.co2ReductionValue)) CO\u{2082}")
                     .font(.system(size: 14))
                     .padding(.trailing, 10.0)
 

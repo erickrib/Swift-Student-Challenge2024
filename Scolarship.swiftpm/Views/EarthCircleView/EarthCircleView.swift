@@ -9,10 +9,11 @@ import SwiftUI
 import SpriteKit
 
 struct EarthCircleView: View {
-    
     @StateObject var earthCircleViewModel = EarthCircleViewModel()
     @StateObject var emissionSectorManager: EmissionSectorManager = EmissionSectorManager(strategy: SectorInstance.industry.getInstance())
-    
+    @StateObject var codeEditorViewModel: CodeEditorViewModel = CodeEditorViewModel()
+
+
     var body: some View {
         GeometryReader { proxy in
             
@@ -24,7 +25,6 @@ struct EarthCircleView: View {
                 if earthCircleViewModel.isComputerInterfaceVisible {
                     ComputerInterface(onClose: {
                         earthCircleViewModel.isComputerInterfaceVisible.toggle()
-                        earthCircleViewModel.isExecutionResult = true
                         
                         return Void()
                     })
@@ -39,8 +39,11 @@ struct EarthCircleView: View {
             .onAppear {
                 print(proxy.size)
                 SCENE_SIZE = proxy.size
+                codeEditorViewModel.earthCircleViewModel = earthCircleViewModel
             }
             .environmentObject(emissionSectorManager)
+            .environmentObject(codeEditorViewModel)
+            .environmentObject(earthCircleViewModel)
         }
         .ignoresSafeArea()
     }

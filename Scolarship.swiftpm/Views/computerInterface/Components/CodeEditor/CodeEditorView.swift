@@ -20,7 +20,7 @@ struct CodeEditorView: View {
             VStack (alignment: .leading, spacing: 200){
                 HStack{
                     Button(action: {
-                        
+                        codeEditorViewModel.runCode()
                     }){
                         HStack {
                             Image(systemName: "play.fill")

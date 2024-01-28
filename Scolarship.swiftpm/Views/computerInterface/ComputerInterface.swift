@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ComputerInterface: View {
     
-    @StateObject var codeEditorViewModel: CodeEditorViewModel = CodeEditorViewModel()
+    @EnvironmentObject var codeEditorViewModel: CodeEditorViewModel
 
     var onClose: () -> Void?
     
@@ -43,7 +43,6 @@ struct ComputerInterface: View {
                 onClose()
             }
         )
-        .environmentObject(codeEditorViewModel)
     }
 }
 

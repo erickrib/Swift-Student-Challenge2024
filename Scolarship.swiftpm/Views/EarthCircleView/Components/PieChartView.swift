@@ -13,6 +13,9 @@ struct PieChartView: View {
         (1, .orange)
     ]
     
+    @EnvironmentObject var earthCircleViewModel:EarthCircleViewModel
+
+    
     var body: some View {
         ZStack {
             
@@ -60,7 +63,7 @@ struct PieChartView: View {
                 .stroke(Color.white, lineWidth: 2)
                 .frame(width: 152, height: 152)
             
-            Text("350 CO\u{2082}")
+            Text("\(Int(earthCircleViewModel.co2Status.current)) CO\u{2082}")
                 .font(.system(size: 18))
                 .padding(.bottom, 0)
             

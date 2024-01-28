@@ -43,8 +43,18 @@ class GameScene: SKScene {
         return overlay
     }()
     
-    var viewModel: EarthCircleViewModel?
+    var viewModel: EarthCircleViewModel
+    
+    init(size: CGSize, viewModel: EarthCircleViewModel) {
+        self.viewModel = viewModel
 
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMove(to view: SKView) {
         
         addChild(atmosphereBackground)
@@ -108,11 +118,11 @@ class GameScene: SKScene {
         
         if let node = nodes(at: location).first {
             if node.name == "computerButton" {
-                viewModel?.isComputerInterfaceVisible.toggle()
+                viewModel.isComputerInterfaceVisible.toggle()
             } else if node.name == "questionButton" {
                 
             } else if node.name == "overlay" {
-           
+                
             }
         }
     }
