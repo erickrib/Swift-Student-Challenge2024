@@ -12,6 +12,7 @@ class CodeEditorViewModel: ObservableObject {
     
     @Published var codeLines: [SustainableActionFunction] = []
     @Published var selectedLineIndex: Int?
+    @Published var touchPosition: CGFloat = 0.8
     
     @Published var ecopoints: Int = 30
     var earthCircleViewModel: EarthCircleViewModel?
@@ -30,8 +31,13 @@ class CodeEditorViewModel: ObservableObject {
             codeLines.remove(at: index)
             codeLines.insert(action, at: index)
         } else {
-            codeLines.insert(action, at: index + 1)
-            selectedLineIndex = index + 1
+            if touchPosition < 0.3 && index == 0 {
+                codeLines.insert(action, at: index)
+                selectedLineIndex = index
+            } else {
+                codeLines.insert(action, at: index + 1)
+                selectedLineIndex = index + 1
+            }
         }
     }
     
@@ -46,8 +52,14 @@ class CodeEditorViewModel: ObservableObject {
         }
         
         if !(codeLines[index].code == "") {
-            codeLines.insert(emptyFunction, at: index + 1)
-            selectedLineIndex = index + 1
+            
+            if touchPosition < 0.3 && index == 0 {
+                codeLines.insert(emptyFunction, at: index)
+                selectedLineIndex = index 
+            } else {
+                codeLines.insert(emptyFunction, at: index + 1)
+                selectedLineIndex = index + 1
+            }
         }
     }
     
@@ -72,12 +84,6 @@ class CodeEditorViewModel: ObservableObject {
     }
     
     func runCode() {
-        var co2Reduction:Double = 0
-        
-        for sustainableFunction in codeLines {
-            co2Reduction += sustainableFunction.co2ReductionValue
-        }
-        
-        earthCircleViewModel?.changeCO2Status(value: co2Reduction)
+        earthCircleViewModel?.changeCO2Status(actions: codeLines)
     }
 }

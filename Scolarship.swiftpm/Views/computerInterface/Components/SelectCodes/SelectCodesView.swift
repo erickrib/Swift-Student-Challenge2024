@@ -91,7 +91,7 @@ struct SelectCodesView: View {
                             Button(action: {
                                 emissionSectorManager.strategy = sector.getInstance()
                             }){
-                                Image(sector.getInstance().configure().iconName)
+                                Image(sector.getInstance().configuration.iconName)
                                     .resizable()
                                     .scaledToFit()
                                     .padding(.vertical, 10.0)

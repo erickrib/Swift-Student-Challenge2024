@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PieChartView: View {
     @State private var slices: [(Double, Color)] = [
-        (1, .red),
+        (3, .red),
         (1, .orange)
     ]
     
@@ -71,6 +71,22 @@ struct PieChartView: View {
                 .padding(.bottom, 80.0)
                 .font(.system(size: 14))
         }
+        .onChange(of: earthCircleViewModel.co2Status.current) { newValue in
+            let baseReduceEmission = earthCircleViewModel.co2Status.initial - earthCircleViewModel.co2Status.goal
+            let newEmission = earthCircleViewModel.co2Status.initial - earthCircleViewModel.co2Status.current
+
+            let normalizedValue = max(0, min(1, newEmission / baseReduceEmission))
+
+            let mappedValue = 3 - 2 * normalizedValue
+
+            let newEmissionSlice = max(1, min(3, mappedValue))
+
+            slices = [
+                (newEmissionSlice, .red),
+                (1, .orange)
+            ]
+        }
+
     }
 }
 

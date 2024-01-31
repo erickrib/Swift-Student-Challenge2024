@@ -10,5 +10,13 @@ import SwiftUI
 // FRAME
 public var SCENE_SIZE:CGSize = .zero
 
-//PLANET EARTH
+//PLANET EARTH IMAGE
 public let PLANET = "earthSectors"
+public let PLANET_STAGE02 = "stage2"
+
+// PLANET ATMOSPHERE
+public let ATMOSPHERE = "atmosphere"
+public let ATMOSPHERE2 = "atmosphere2"
+
+// CLOUD
+public let DARK_CLOUD = "darkCloud"

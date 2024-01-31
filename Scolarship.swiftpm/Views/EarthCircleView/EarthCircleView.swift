@@ -31,7 +31,7 @@ struct EarthCircleView: View {
                 }
                 
                 if earthCircleViewModel.isExecutionResult {
-                    ExecutionResultView(onClose: {
+                    ExecutionResultView(message: earthCircleViewModel.message, onClose: {
                         earthCircleViewModel.isExecutionResult.toggle()
                     })
                 }

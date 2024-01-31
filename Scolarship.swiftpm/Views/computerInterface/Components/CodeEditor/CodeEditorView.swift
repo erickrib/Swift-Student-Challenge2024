@@ -55,20 +55,34 @@ struct CodeEditorView: View {
                 VStack(alignment: .leading, spacing: 0){
                     ForEach(0..<codeEditorViewModel.codeLines.count, id: \.self) { index in
                         HStack(spacing: 0){
+                            
+                            if (codeEditorViewModel.selectedLineIndex == index) && index == 0 && codeEditorViewModel.touchPosition < 0.3 {
+                                CursorView()
+                            }
+                            
                             Text(codeEditorViewModel.codeLines[index].code)
                                 .font(.system(size: 28))
-                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 2))
+                                .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2))
                             
-                            if codeEditorViewModel.selectedLineIndex == index {
+                            if codeEditorViewModel.selectedLineIndex == index && index > 0 {
+                                CursorView()
+                            }
+                            
+                            if codeEditorViewModel.selectedLineIndex == index && index == 0 && codeEditorViewModel.touchPosition > 0.3  {
                                 CursorView()
                             }
                             
                             Spacer()
                         }
+                        .padding(.leading, 5)
                         .background(codeEditorViewModel.selectedLineIndex == index ? Color.blue.opacity(0.3) : Color.clear)
                         .contentShape(Rectangle())
-                        .onTapGesture {
+                        .onTapGesture { location in
                             handleLineSelection(index: index)
+                            
+                            let textWidth = measureTextWidth(text: codeEditorViewModel.codeLines[index].code, fontSize: 32)
+                            codeEditorViewModel.touchPosition = location.x / textWidth
+                            
                         }
                     }
                 }
@@ -89,6 +103,14 @@ struct CodeEditorView: View {
             codeEditorViewModel.selectedLineIndex = index
         }
     }
+    
+    private func measureTextWidth(text: String, fontSize: CGFloat) -> CGFloat {
+            let font = UIFont.systemFont(ofSize: fontSize)
+            let attributes = [NSAttributedString.Key.font: font]
+            let attributedText = NSAttributedString(string: text, attributes: attributes)
+            let textSize = attributedText.size()
+            return textSize.width
+        }
 }
 
 struct CursorView: View {
@@ -106,7 +128,7 @@ struct CursorView: View {
                 }
                 
             }
-            .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 8))
+            .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
     }
 }
 

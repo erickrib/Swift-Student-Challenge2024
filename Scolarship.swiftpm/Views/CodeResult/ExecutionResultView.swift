@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExecutionResultView: View {
     
+    var message:String
     var onClose: () -> Void?
 
     var body: some View {
@@ -39,6 +40,7 @@ struct ExecutionResultView: View {
                 
                 Divider()
                 
+                Text(message)
             }
             .background(
                 RoundedRectangle(cornerRadius: 10)

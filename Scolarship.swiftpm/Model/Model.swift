@@ -8,7 +8,7 @@
 import Foundation
 import SpriteKit
 
-struct CO2Status {
+struct CO2Status: Equatable {
     var current: Double = 421
     var initial: Double = 421
     var goal: Double = 350
@@ -23,6 +23,7 @@ struct EmissionSectors:Identifiable {
     
     var percentageEmission: Double
     var absorption: Double
+    var reductionTarget: Double?
     var sustainableActionFunction: [SustainableActionFunction]
 }
 

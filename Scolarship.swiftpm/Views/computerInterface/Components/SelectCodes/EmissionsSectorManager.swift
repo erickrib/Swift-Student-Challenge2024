@@ -17,8 +17,8 @@ class EmissionSectorManager:ObservableObject {
     }
     
     func getSector() -> EmissionSectors {
-        self.strategy.configure()
-    } 
+        self.strategy.configuration
+    }
 }
 
 enum SectorInstance:CaseIterable {
@@ -53,5 +53,9 @@ enum SectorInstance:CaseIterable {
         case .agriculture:
             return AgricultureSector()
         }
+    }
+    
+    static func getAllInstances() -> [EmissionSectorStrategy] {
+        return instances.values.map { $0 }
     }
 }

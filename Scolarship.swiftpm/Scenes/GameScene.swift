@@ -12,20 +12,21 @@ protocol ModalPresenter: AnyObject {
     func showCustomModal()
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, ObservableObject {
     
-    var atmosphereBackground: SKSpriteNode {
-        let atmosphereBackground = SKSpriteNode(imageNamed: "atmosphere")
-        atmosphereBackground.position = CGPoint(x: size.width/2, y: size.height/2)
-        return atmosphereBackground
-    }
     
     private lazy var pieChartView: PieChartView = {
         let pieChartView = PieChartView()
-        return pieChartView
+        return pieChartView 
     }()
     
     private lazy var hudLayer: HUDLayer = HUDLayer(screenSize: SCENE_SIZE)
+    
+    lazy var atmosphereBackground: SKSpriteNode = {
+        let atmosphereBackground = SKSpriteNode(imageNamed: ATMOSPHERE)
+        atmosphereBackground.position = CGPoint(x: size.width/2, y: size.height/2)
+        return atmosphereBackground
+    }()
     
     lazy var earthImage: SKSpriteNode = {
         let texture = SKTexture(imageNamed: PLANET)
@@ -43,17 +44,18 @@ class GameScene: SKScene {
         return overlay
     }()
     
-    var viewModel: EarthCircleViewModel
+    private lazy var clouds: [SKSpriteNode] = {
+        let positions: [CGPoint] = [
+            CGPoint(x: size.width * 0.12, y: size.height * 0.8),
+            CGPoint(x: size.width * 0.0912, y: size.height * 0.5),
+            CGPoint(x: size.width * 0.14, y: size.height * 0.2),
+            CGPoint(x: size.width * 0.82, y: size.height * 0.8),
+            CGPoint(x: size.width * 0.88, y: size.height * 0.52)
+        ]
+        return positions.map { createCloudTexture(at: $0) }
+    }()
     
-    init(size: CGSize, viewModel: EarthCircleViewModel) {
-        self.viewModel = viewModel
-
-        super.init(size: size)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var viewModel: GameSceneDelegate? = nil
     
     override func didMove(to view: SKView) {
         
@@ -61,21 +63,13 @@ class GameScene: SKScene {
         addChild(earthImage)
         addChild(hudLayer)
         
-        let cloud1 = createCloudBackground(at: CGPoint(x: size.width * 0.12, y: size.height * 0.8))
-        let cloud2 = createCloudBackground(at: CGPoint(x: size.width * 0.0912, y: size.height * 0.5))
-        let cloud3 = createCloudBackground(at: CGPoint(x: size.width * 0.14, y: size.height * 0.2))
-        let cloud4 = createCloudBackground(at: CGPoint(x: size.width * 0.82, y: size.height * 0.8))
-        let cloud5 = createCloudBackground(at: CGPoint(x: size.width * 0.88, y: size.height * 0.52))
-        
-        addChild(cloud1)
-        addChild(cloud2)
-        addChild(cloud3)
-        addChild(cloud4)
-        addChild(cloud5)
+        clouds.forEach { addChild($0) }
         
         setupPieChartView()
         
         self.backgroundColor = .white
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateEarthImage), name: Notification.Name("EarthTextureDidChange"), object: nil)
     }
     
     private func setupPieChartView() {
@@ -105,11 +99,35 @@ class GameScene: SKScene {
         }
     }
     
-    private func createCloudBackground(at position: CGPoint) -> SKSpriteNode {
+    private func createCloudTexture(at position: CGPoint) -> SKSpriteNode {
         let cloudBackground = SKSpriteNode(imageNamed: "cloud")
         cloudBackground.position = position
         cloudBackground.scale(to: autoScale(cloudBackground, widthProportion: 0.07, screenSize: SCENE_SIZE))
         return cloudBackground
+    }
+    
+    private func updateCloudsTexture(textureName: String) {
+        clouds.forEach { node in
+            node.texture = SKTexture(imageNamed: textureName)
+        }
+    }
+    
+    @objc func updateEarthImage() {
+        
+        if let currentCO2 = viewModel?.co2Status.current,
+           let initialCO2 = viewModel?.co2Status.initial,
+           let goalCO2 = viewModel?.co2Status.goal {
+            let co2Percentage = (currentCO2 - goalCO2) / (initialCO2 - goalCO2)
+            switch co2Percentage {
+            case let p where p > 0.14:
+                earthImage.texture = SKTexture(imageNamed: PLANET_STAGE02)
+                atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE2)
+                updateCloudsTexture(textureName: DARK_CLOUD)
+            default:
+                break
+            }
+        }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -118,13 +136,17 @@ class GameScene: SKScene {
         
         if let node = nodes(at: location).first {
             if node.name == "computerButton" {
-                viewModel.isComputerInterfaceVisible.toggle()
+                viewModel?.isComputerInterfaceVisible.toggle()
             } else if node.name == "questionButton" {
                 
             } else if node.name == "overlay" {
                 
             }
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("EarthTextureDidChange"), object: nil)
     }
 }
 
