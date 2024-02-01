@@ -24,6 +24,7 @@ class CodeEditorViewModel: ObservableObject {
         guard let index = selectedLineIndex else {
             codeLines.append(action)
             selectedLineIndex = codeLines.count - 1
+            updateCustomValues()
             return
         }
         
@@ -39,6 +40,8 @@ class CodeEditorViewModel: ObservableObject {
                 selectedLineIndex = index + 1
             }
         }
+        
+        updateCustomValues()
     }
     
     func addLine() {
@@ -55,7 +58,7 @@ class CodeEditorViewModel: ObservableObject {
             
             if touchPosition < 0.3 && index == 0 {
                 codeLines.insert(emptyFunction, at: index)
-                selectedLineIndex = index 
+                selectedLineIndex = index
             } else {
                 codeLines.insert(emptyFunction, at: index + 1)
                 selectedLineIndex = index + 1
@@ -68,6 +71,7 @@ class CodeEditorViewModel: ObservableObject {
         
         guard !codeLines.isEmpty else {
             selectedLineIndex = nil
+            updateCustomValues()
             return
         }
         
@@ -81,9 +85,20 @@ class CodeEditorViewModel: ObservableObject {
             ecopoints += codeLines[codeLines.count - 1].costEcoPoints
             codeLines.remove(at: codeLines.count - 1)
         }
+        
+        updateCustomValues()
     }
     
     func runCode() {
         earthCircleViewModel?.changeCO2Status(actions: codeLines)
+    }
+    
+    private func updateCustomValues() {
+        for (index, _) in codeLines.enumerated() {
+            let bonusPercentual: [Double] = [0.25, 0.20, 0.15, 0.10, 0.05, 0.03, 0.02]
+            if index <= bonusPercentual.count - 1{
+                codeLines[index].bonus = bonusPercentual[index]
+            }
+        }
     }
 }

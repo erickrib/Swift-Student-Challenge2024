@@ -72,6 +72,10 @@ struct CodeEditorView: View {
                                 CursorView()
                             }
                             
+                            if codeEditorViewModel.codeLines[index].bonus > 0 {
+                                BonusView(bonus: codeEditorViewModel.codeLines[index].bonus)
+                            }
+                            
                             Spacer()
                         }
                         .padding(.leading, 5)
@@ -129,6 +133,26 @@ struct CursorView: View {
                 
             }
             .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
+    }
+}
+
+struct BonusView: View {
+    let bonus: Double
+
+    var body: some View {
+        HStack {
+            Text("//")
+                .font(.system(size: 22))
+                .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 5))
+
+            if bonus > 0 {
+                let percentageBonus = Int(bonus * 100)
+                
+                Text("+\(percentageBonus)%")
+                    .font(.system(size: 18))
+                    .padding(EdgeInsets(top: 7, leading: 0, bottom: 0, trailing: 0))
+            }
+        }
     }
 }
 

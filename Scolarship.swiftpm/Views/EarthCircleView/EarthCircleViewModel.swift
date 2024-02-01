@@ -37,11 +37,11 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
         for var sector in allInstances {
             sector.configuration.reductionTarget = co2Difference * sector.configuration.percentageEmission
         }
-        
+                
         for code in actions{
-            if var sectorInstance = allInstances.first(where: { $0.configuration.sustainableActionFunction.contains(code) }) {
+            if var sectorInstance = allInstances.first(where: { $0.configuration.sustainableActionFunction.contains { $0.id == code.id }}) {
                 if let reductionTarget = sectorInstance.configuration.reductionTarget {
-                    sectorInstance.configuration.reductionTarget = max(0, reductionTarget - code.co2ReductionValue)
+                    sectorInstance.configuration.reductionTarget = max(0, reductionTarget - (code.co2ReductionValue + (code.co2ReductionValue * code.bonus)))
                     co2Difference = (co2Difference - reductionTarget) + (sectorInstance.configuration.reductionTarget ?? 0)
                 }
                 
@@ -50,6 +50,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
                 isComputerInterfaceVisible = false
             }
         }
+        
         co2Status.current = co2Status.goal + min(71, co2Difference)
         message = "Olá mundo"
         
