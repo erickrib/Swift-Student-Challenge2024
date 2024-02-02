@@ -10,14 +10,19 @@ import SwiftUI
 struct ExecutionResultView: View {
     
     var messages:[Message]
+    var co2Status:CO2Status
     var onClose: () -> Void?
     
     var body: some View {
         ZStack{
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Execution Result")
-                        .font(.title3.bold())
+                    HStack(spacing: 180){
+                        Text("Execution Result:")
+                            .font(.title3.bold())
+                        
+                        Text("\(Int(co2Status.initial))CO\u{2082}    ->     \(Int(co2Status.current))CO\u{2082}" )
+                    }
                     
                     Spacer()
                     
@@ -35,8 +40,11 @@ struct ExecutionResultView: View {
                             .foregroundColor(Color(uiColor: .label))
                     }
                 }
-                .padding(.horizontal, 30)
-                .padding(.vertical, 15)
+                .padding(.top, 15)
+                .padding(.bottom, 10)
+                .padding(.trailing, 30)
+                .padding(.leading, 30)
+
                 
                 Divider()
                 

@@ -72,5 +72,4 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     private func updateEarthTexture() {
         NotificationCenter.default.post(name: Notification.Name("EarthTextureDidChange"), object: nil)
     }
-    
 }

@@ -6,6 +6,7 @@
 //
 
 import SpriteKit
+import SwiftUI
 
 extension SKNode {
     func autoScale <T: SKSpriteNode>(_ node: T, widthProportion: Double, screenSize: CGSize) -> CGSize  {
