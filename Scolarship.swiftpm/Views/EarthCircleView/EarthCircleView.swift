@@ -31,8 +31,11 @@ struct EarthCircleView: View {
                 }
                 
                 if earthCircleViewModel.isExecutionResult {
-                    ExecutionResultView(message: earthCircleViewModel.message, onClose: {
+                    ExecutionResultView(messages: earthCircleViewModel.messages, onClose: {
                         earthCircleViewModel.isExecutionResult.toggle()
+                        earthCircleViewModel.messages = []
+                        
+                        return Void()
                     })
                 }
             }

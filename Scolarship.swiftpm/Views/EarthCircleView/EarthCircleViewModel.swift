@@ -19,7 +19,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     @Published var isExecutionResult:Bool = false
     
     @Published var co2Status:CO2Status = CO2Status()
-    @Published var message = ""
+    @Published var messages: [Message] = []
     
     var scene:GameScene?
     
@@ -43,6 +43,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
                 if let reductionTarget = sectorInstance.configuration.reductionTarget {
                     sectorInstance.configuration.reductionTarget = max(0, reductionTarget - (code.co2ReductionValue + (code.co2ReductionValue * code.bonus)))
                     co2Difference = (co2Difference - reductionTarget) + (sectorInstance.configuration.reductionTarget ?? 0)
+                    
                 }
                 
                 co2Status.current = co2Status.initial
@@ -50,14 +51,25 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
                 isComputerInterfaceVisible = false
             }
         }
-        
+                
         co2Status.current = co2Status.goal + min(71, co2Difference)
-        message = "Olá mundo"
-        
-        updateEarthTexture()
+        for sector in SectorInstance.allCases {
+            updateMessages(sector.getInstance())
+        }
+        updateEarthTexture()        
     }
     
-    func updateEarthTexture() {
+    func updateMessages(_ sector: any EmissionSectorStrategy) {
+        
+        if sector.configuration.reductionTarget == 0 {
+            messages.append(Message(successMessage: "Redução de CO2 alcançada com sucesso em \(sector.configuration.name)", isSuccess:  true))
+        } else {
+            messages.append(Message(errorMessage: "Falha na redução de CO2 em \(sector.configuration.name)", isSuccess: false))
+        }
+        
+    }
+    
+    private func updateEarthTexture() {
         NotificationCenter.default.post(name: Notification.Name("EarthTextureDidChange"), object: nil)
     }
     

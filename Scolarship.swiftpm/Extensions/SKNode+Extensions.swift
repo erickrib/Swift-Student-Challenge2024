@@ -15,3 +15,9 @@ extension SKNode {
             return scale
     }
 }
+
+extension CGFloat {
+    var degreesToRadians: CGFloat {
+        return self * CGFloat.pi / 180.0
+    }
+}

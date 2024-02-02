@@ -8,11 +8,12 @@
 import Foundation
 import SpriteKit
 
-protocol EmissionSectorStrategy {
+protocol EmissionSectorStrategy: Identifiable {
     var configuration: EmissionSectors { get set }
 }
 
 class IndustrySector: EmissionSectorStrategy {
+    
     var configuration: EmissionSectors =
     EmissionSectors(name: "Industry", iconName: "industry", colorName: "", percentageEmission: 0.25, sustainableActionFunction: [
         SustainableActionFunction(code: "increaseCleanEnergy()", description: "Transition to the use of renewable energy in industrial operations, such as solar, wind, and other renewable sources.", co2ReductionValue: 10, costEcoPoints: 10),
@@ -26,6 +27,7 @@ class IndustrySector: EmissionSectorStrategy {
 }
 
 class EnergySector: EmissionSectorStrategy {
+
     var configuration: EmissionSectors =
     EmissionSectors(name: "Energy", iconName: "energy", colorName: "", percentageEmission: 0.35, sustainableActionFunction: [
         SustainableActionFunction(code: "reduceThermalPowerPlants()", description: "Reduce dependence on thermoelectric power plants, especially coal-fired ones, lowering pollutant emissions.", co2ReductionValue: 10, costEcoPoints: 10),
@@ -38,6 +40,7 @@ class EnergySector: EmissionSectorStrategy {
 }
 
 class TransportSector: EmissionSectorStrategy {
+    
     var configuration: EmissionSectors =
     EmissionSectors(name: "Transport", iconName: "transport", colorName: "", percentageEmission: 0.20, sustainableActionFunction: [
         SustainableActionFunction(code: "investInPublicTransportation()", description: "Improving and expanding public transportation systems can encourage more people to use collective transportation instead of individual vehicles.", co2ReductionValue: 10, costEcoPoints: 2),
@@ -47,6 +50,7 @@ class TransportSector: EmissionSectorStrategy {
 }
 
 class DeforestationSector: EmissionSectorStrategy {
+    
     var configuration: EmissionSectors =
     EmissionSectors(name: "Deforestation", iconName: "deforestation", colorName: "", percentageEmission: 0.10, sustainableActionFunction: [
         SustainableActionFunction(code: "protectForests()", description: "Establish and strengthen conservation areas, natural reserves, and national parks.", co2ReductionValue: 10, costEcoPoints: 2),
@@ -58,6 +62,7 @@ class DeforestationSector: EmissionSectorStrategy {
 }
 
 class AgricultureSector: EmissionSectorStrategy {
+    
     var configuration: EmissionSectors =
     EmissionSectors(name: "Agriculture", iconName: "agriculture", colorName: "", percentageEmission: 0.10, sustainableActionFunction: [
         SustainableActionFunction(code: "implementConservationAgriculture()", description: "Addresses several fundamental aspects such as soil cover preservation, water use efficiency, and contributes to carbon capture.", co2ReductionValue: 10, costEcoPoints: 2),

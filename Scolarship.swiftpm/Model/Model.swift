@@ -14,7 +14,7 @@ struct CO2Status: Equatable {
     var goal: Double = 350
 }
 
-struct EmissionSectors:Identifiable {
+struct EmissionSectors:Identifiable, Equatable {
     var id: UUID = UUID()
     
     var name:String
@@ -36,4 +36,12 @@ struct SustainableActionFunction:Identifiable, Equatable {
     var costEcoPoints:Int
     
     var bonus: Double = 0.0
+}
+
+struct Message:Identifiable {
+    var id:UUID = UUID()
+    
+    var successMessage: String = ""
+    var errorMessage: String = ""
+    var isSuccess: Bool = false
 }

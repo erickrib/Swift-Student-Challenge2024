@@ -29,11 +29,8 @@ class GameScene: SKScene, ObservableObject {
     }()
     
     lazy var earthImage: SKSpriteNode = {
-        let texture = SKTexture(imageNamed: PLANET)
-        let image = SKSpriteNode(texture:  texture)
-        image.position = CGPoint(x: SCENE_SIZE.width / 2, y:  SCENE_SIZE.height/2)
-        image.scale(to: autoScale(image, widthProportion: 0.6525, screenSize: SCENE_SIZE))
-        return image
+        let earth = EarthSpriteNode()
+        return earth
     }()
     
     lazy var blackOverlay: SKSpriteNode = {

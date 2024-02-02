@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ExecutionResultView: View {
     
-    var message:String
+    var messages:[Message]
     var onClose: () -> Void?
-
+    
     var body: some View {
         ZStack{
             VStack(alignment: .leading) {
@@ -40,13 +40,45 @@ struct ExecutionResultView: View {
                 
                 Divider()
                 
-                Text(message)
+                ScrollView{
+                    ForEach(messages){ message in
+                        if message.isSuccess {
+                                HStack{
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundStyle(Color.green)
+                                        .frame(width: 26, height: 24)
+                                    Text(message.successMessage)
+                                }
+                                .padding(.horizontal, 30)
+                                .padding(.vertical, 10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                                Divider()
+                        } else {
+                            HStack{
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(Color.red)
+                                    .frame(width: 26, height: 24)
+                                Text(message.errorMessage)
+                            }
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Divider()
+                        }
+                    }
+                }
             }
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.white)
             )
-            .frame(maxWidth: 680, maxHeight: 720)
+            .frame(maxWidth: 680, maxHeight: 320)
             .offset(y: SCENE_SIZE.height * 0.191)
         }
         .frame(width: SCENE_SIZE.width, height: SCENE_SIZE.height)
@@ -60,3 +92,4 @@ struct ExecutionResultView: View {
         )
     }
 }
+
