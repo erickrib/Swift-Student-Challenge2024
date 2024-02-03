@@ -28,7 +28,7 @@ class GameScene: SKScene, ObservableObject {
         return atmosphereBackground
     }()
     
-    lazy var earthImage: SKSpriteNode = {
+    lazy var earthImage: EarthSpriteNode = {
         let earth = EarthSpriteNode()
         return earth
     }()
@@ -59,6 +59,8 @@ class GameScene: SKScene, ObservableObject {
         addChild(atmosphereBackground)
         addChild(earthImage)
         addChild(hudLayer)
+        
+        earthImage.viewModel = viewModel
         
         clouds.forEach { addChild($0) }
         

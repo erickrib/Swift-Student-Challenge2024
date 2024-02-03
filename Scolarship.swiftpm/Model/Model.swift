@@ -23,6 +23,7 @@ struct EmissionSectors:Identifiable, Equatable {
     
     var percentageEmission: Double
     var reductionTarget: Double?
+    var description:String
     
     var sustainableActionFunction: [SustainableActionFunction]
 }

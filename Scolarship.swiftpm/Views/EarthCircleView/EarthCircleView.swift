@@ -12,7 +12,7 @@ struct EarthCircleView: View {
     @StateObject var earthCircleViewModel = EarthCircleViewModel()
     @StateObject var emissionSectorManager: EmissionSectorManager = EmissionSectorManager(strategy: SectorInstance.industry.getInstance())
     @StateObject var codeEditorViewModel: CodeEditorViewModel = CodeEditorViewModel()
-
+    
     var body: some View {
         GeometryReader { proxy in
             
@@ -23,7 +23,7 @@ struct EarthCircleView: View {
                 
                 if earthCircleViewModel.isComputerInterfaceVisible {
                     ComputerInterface(onClose: {
-                        earthCircleViewModel.isComputerInterfaceVisible.toggle()
+                        earthCircleViewModel.isComputerInterfaceVisible = false
                         
                         return Void()
                     })
@@ -31,11 +31,18 @@ struct EarthCircleView: View {
                 
                 if earthCircleViewModel.isExecutionResult {
                     ExecutionResultView(messages: earthCircleViewModel.messages, co2Status: earthCircleViewModel.co2Status, onClose: {
-                        earthCircleViewModel.isExecutionResult.toggle()
+                        earthCircleViewModel.isExecutionResult = false
                         earthCircleViewModel.messages = []
                         
                         return Void()
                     })
+                }
+                
+                if earthCircleViewModel.isSectorDetails {
+                    SectorDetailsView(onClose: {
+                        earthCircleViewModel.isSectorDetails = false
+                    }, sector: earthCircleViewModel.chosenSector
+                    )
                 }
             }
             .onAppear {

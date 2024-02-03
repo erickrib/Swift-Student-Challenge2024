@@ -91,10 +91,9 @@ struct CodeEditorView: View {
                     }
                 }
                 
-                Spacer()
             }
             .padding([.leading, .trailing], 20)
-            .frame(maxHeight: .infinity)
+            .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(width: SCENE_SIZE.width * 0.49, height: SCENE_SIZE.height * 0.77)
     }

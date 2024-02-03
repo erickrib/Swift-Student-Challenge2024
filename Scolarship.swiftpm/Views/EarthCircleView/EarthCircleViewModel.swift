@@ -10,16 +10,22 @@ import SpriteKit
 
 protocol GameSceneDelegate {
     var isComputerInterfaceVisible: Bool { get set }
+    var isSectorDetails:Bool { get set }
     var co2Status:CO2Status { get set }
+    var chosenSector:EmissionSectorStrategy? { get set }
+
 }
 
 class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     
     @Published var isComputerInterfaceVisible:Bool = false
     @Published var isExecutionResult:Bool = false
+    @Published var isSectorDetails = false
     
     @Published var co2Status:CO2Status = CO2Status()
     @Published var messages: [Message] = []
+    
+    @Published var chosenSector:EmissionSectorStrategy?
     
     var scene:GameScene?
     

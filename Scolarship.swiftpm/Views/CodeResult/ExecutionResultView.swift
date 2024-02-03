@@ -44,7 +44,6 @@ struct ExecutionResultView: View {
                 .padding(.bottom, 10)
                 .padding(.trailing, 30)
                 .padding(.leading, 30)
-
                 
                 Divider()
                 

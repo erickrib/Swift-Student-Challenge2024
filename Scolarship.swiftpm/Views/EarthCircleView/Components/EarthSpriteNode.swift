@@ -9,6 +9,8 @@ import SpriteKit
 
 class EarthSpriteNode: SKSpriteNode {
     
+    var viewModel: GameSceneDelegate?
+    
     init() {
         let texture = SKTexture(imageNamed: PLANET)
         super.init(texture: texture, color: .clear, size: texture.size())
@@ -28,10 +30,15 @@ class EarthSpriteNode: SKSpriteNode {
             CGPoint(x: size.width * 0.24, y: -size.height * 0.22)
         ]
         
-        for (position, rotation) in positionsRedSquareS {
+        let sectors = SectorInstance.allCases
+        
+        for (index, (position, rotation)) in positionsRedSquareS.enumerated() {
             let redSquareSize = CGSize(width: 50, height: 50)
             let redSquareNode = RedSquareNode(size: redSquareSize, rotation: rotation.degreesToRadians)
+            redSquareNode.earthSpriteNode = self
             redSquareNode.position = position
+            redSquareNode.sector = sectors[index].getInstance()
+            
             addChild(redSquareNode)
             redSquareNode.emitBlueBalls()
         }
@@ -39,7 +46,7 @@ class EarthSpriteNode: SKSpriteNode {
         for (index, position) in positionsBlueSquare.enumerated() {
             let blueSquareSize = CGSize(width: 250, height: 50)
             let rotation: CGFloat = index > 0 ? -CGFloat.pi / 1.3 : CGFloat.pi / 1.3
-
+            
             let blue = BlueSquareNode(size: blueSquareSize, rotation: rotation)
             blue.position = position
             addChild(blue)
@@ -52,17 +59,23 @@ class EarthSpriteNode: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func openDetailsSector(chosenSector: EmissionSectorStrategy){
+        viewModel?.isSectorDetails = true
+        viewModel?.chosenSector = chosenSector
+    }
 }
 
 
 class RedSquareNode: SKSpriteNode {
     
+    var earthSpriteNode: EarthSpriteNode?
     var emissionNodes: [SKShapeNode] = []
+    var sector: EmissionSectorStrategy?
     
     init(size: CGSize, rotation: CGFloat) {
         super.init(texture: nil, color: .clear, size: size)
         configureEmissionNodes()
-        
+        isUserInteractionEnabled  = true
         zRotation = rotation
     }
     
@@ -116,13 +129,19 @@ class RedSquareNode: SKSpriteNode {
         }
     }
     
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let sector = self.sector {
+            earthSpriteNode?.openDetailsSector(chosenSector: sector)
+        }
+    }
 }
 
 class BlueSquareNode: SKSpriteNode {
     
     var emissionNodes: [SKShapeNode] = []
     var initialPositions: [CGPoint] = []
-
+    
     init(size: CGSize, rotation: CGFloat) {
         super.init(texture: nil, color: .clear, size: size)
         configureEmissionNodes()
@@ -167,21 +186,21 @@ class BlueSquareNode: SKSpriteNode {
         for (index, emissionNode) in emissionNodes.enumerated() {
             let moveUpAction = SKAction.moveBy(x: 0, y: -self.size.height * 2, duration: 5.0)
             let waitAction = SKAction.wait(forDuration: 1.0 + Double(index))
-
+            
             let fadeInAction = SKAction.fadeIn(withDuration: 0.5)
             let fadeOutAction = SKAction.fadeOut(withDuration: 0.5)
-
+            
             let sequenceAction = SKAction.sequence([waitAction, fadeInAction, moveUpAction, fadeOutAction])
-
+            
             let resetAction = SKAction.run {
                 emissionNode.position = self.initialPositions[index]
                 emissionNode.alpha = 0.0
             }
-
+            
             let fullSequenceAction = SKAction.sequence([sequenceAction, resetAction])
-
+            
             let repeatForeverAction = SKAction.repeatForever(fullSequenceAction)
-
+            
             emissionNode.run(repeatForeverAction)
         }
     }

@@ -10,9 +10,9 @@ import SpriteKit
 
 class EmissionSectorManager:ObservableObject {
     
-    @Published var strategy: any EmissionSectorStrategy
+    @Published var strategy: EmissionSectorStrategy
     
-    init(strategy: any EmissionSectorStrategy) {
+    init(strategy: EmissionSectorStrategy) {
         self.strategy = strategy
     }
     
@@ -28,7 +28,7 @@ enum SectorInstance:CaseIterable {
     case transport
     case agriculture
     
-    private static var instances: [SectorInstance: any EmissionSectorStrategy] = [:]
+    private static var instances: [SectorInstance: EmissionSectorStrategy] = [:]
     
     func getInstance() -> any EmissionSectorStrategy {
         if let existingInstance = SectorInstance.instances[self] {
@@ -40,7 +40,7 @@ enum SectorInstance:CaseIterable {
         }
     }
     
-    private func createInstance() -> any EmissionSectorStrategy {
+    private func createInstance() -> EmissionSectorStrategy {
         switch self {
         case .industry:
             return IndustrySector()
@@ -55,7 +55,7 @@ enum SectorInstance:CaseIterable {
         }
     }
     
-    static func getAllInstances() -> [any EmissionSectorStrategy] {
+    static func getAllInstances() -> [EmissionSectorStrategy] {
         return instances.values.map { $0 }
     }
 }
