@@ -69,6 +69,8 @@ class GameScene: SKScene, ObservableObject {
         self.backgroundColor = .white
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateEarthImage), name: Notification.Name("EarthTextureDidChange"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateRedSquareNode), name: Notification.Name("updateCO2Node"), object: nil)
+
     }
     
     private func setupPieChartView() {
@@ -129,6 +131,15 @@ class GameScene: SKScene, ObservableObject {
         
     }
     
+    @objc func updateRedSquareNode() {
+        
+        for node in earthImage.children {
+            if let redSquareNode = node as? RedSquareNode {
+                redSquareNode.removeEmissionNodes()
+            }
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -146,6 +157,7 @@ class GameScene: SKScene, ObservableObject {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("EarthTextureDidChange"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("updateCO2Node"), object: nil)
     }
 }
 

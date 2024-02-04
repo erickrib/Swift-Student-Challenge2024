@@ -25,6 +25,9 @@ struct EmissionSectors:Identifiable, Equatable {
     var reductionTarget: Double?
     var description:String
     
+    var initialCO2Nodes: Int
+    var currentCO2Nodes: Int
+    
     var sustainableActionFunction: [SustainableActionFunction]
 }
 

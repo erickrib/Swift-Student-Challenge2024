@@ -38,10 +38,14 @@ class EarthSpriteNode: SKSpriteNode {
             redSquareNode.earthSpriteNode = self
             redSquareNode.position = position
             redSquareNode.sector = sectors[index].getInstance()
+            redSquareNode.configureEmissionNodes()
+            redSquareNode.emitBlueBalls()
             
             addChild(redSquareNode)
-            redSquareNode.emitBlueBalls()
+
         }
+        
+        let absorbs:[EmissionSectorStrategy] = [OceanAbsorb(), ForestsAbsorb()]
         
         for (index, position) in positionsBlueSquare.enumerated() {
             let blueSquareSize = CGSize(width: 250, height: 50)
@@ -49,6 +53,8 @@ class EarthSpriteNode: SKSpriteNode {
             
             let blue = BlueSquareNode(size: blueSquareSize, rotation: rotation)
             blue.position = position
+            blue.earthSpriteNode = self
+            blue.sector = absorbs[index]
             addChild(blue)
             blue.emitBlueBalls()
         }
@@ -74,7 +80,6 @@ class RedSquareNode: SKSpriteNode {
     
     init(size: CGSize, rotation: CGFloat) {
         super.init(texture: nil, color: .clear, size: size)
-        configureEmissionNodes()
         isUserInteractionEnabled  = true
         zRotation = rotation
     }
@@ -84,14 +89,14 @@ class RedSquareNode: SKSpriteNode {
     }
     
     func configureEmissionNodes() {
-        for i in 0..<10 {
+        for i in 0..<(sector?.configuration.currentCO2Nodes ?? 0) {
             let emissionNode = createEmissionNode(at: i)
             addChild(emissionNode)
             emissionNodes.append(emissionNode)
         }
     }
     
-    func createEmissionNode(at index: Int) -> SKShapeNode {
+    private func createEmissionNode(at index: Int) -> SKShapeNode {
         let emissionNode = SKShapeNode(circleOfRadius: 3)
         emissionNode.fillColor = .blue
         emissionNode.alpha = 0.0
@@ -99,17 +104,27 @@ class RedSquareNode: SKSpriteNode {
         return emissionNode
     }
     
-    func emitBlueBalls() {
-        let order = [0, 9, 5, 1, 8, 4, 2, 7, 3, 6]
+    func removeEmissionNodes() {
+        for emissionNode in emissionNodes {
+            emissionNode.removeFromParent()
+        }
+        emissionNodes.removeAll()
+        configureEmissionNodes()
+        emitBlueBalls()
         
+        print("\(sector?.configuration.name) : \(sector?.configuration.currentCO2Nodes)")
+    }
+    
+    func emitBlueBalls() {
         for (index, emissionNode) in emissionNodes.enumerated() {
-            let orderedIndex = order[index]
+            let orderedIndex = generateRandomIndices(count: emissionNodes.count)[index]
             
             let percentage = CGFloat(orderedIndex) / CGFloat(9)
             let xPosition = -50 + percentage * 100
             
             let moveUpAction = SKAction.moveBy(x: xPosition, y: 60, duration: 5.0)
-            let waitAction = SKAction.wait(forDuration: 1.0 + Double(index))
+            let timer = mapToRange(sector?.configuration.currentCO2Nodes ?? 0)
+            let waitAction = SKAction.wait(forDuration: 1.0 + Double(index) + timer)
             
             let fadeInAction = SKAction.fadeIn(withDuration: 0.5)
             let fadeOutAction = SKAction.fadeOut(withDuration: 0.5)
@@ -135,6 +150,32 @@ class RedSquareNode: SKSpriteNode {
             earthSpriteNode?.openDetailsSector(chosenSector: sector)
         }
     }
+    
+    private func mapToRange(_ value: Int) -> Double {
+        switch value {
+        case 0...4:
+            return 2.0
+        case 5...8:
+            return 1.0
+        case 9...12:
+            return -1.0
+        case 13...16:
+            return -3.0
+        default:
+            return 0.0
+        }
+    }
+    
+    private func generateRandomIndices(count: Int) -> [Int] {
+        guard count > 0 else {
+            return []
+        }
+
+        var indices = Array(0..<count)
+        indices.shuffle()
+
+        return indices
+    }
 }
 
 class BlueSquareNode: SKSpriteNode {
@@ -142,8 +183,12 @@ class BlueSquareNode: SKSpriteNode {
     var emissionNodes: [SKShapeNode] = []
     var initialPositions: [CGPoint] = []
     
+    var earthSpriteNode: EarthSpriteNode?
+    var sector: EmissionSectorStrategy?
+    
     init(size: CGSize, rotation: CGFloat) {
         super.init(texture: nil, color: .clear, size: size)
+        isUserInteractionEnabled  = true
         configureEmissionNodes()
         
         zRotation = rotation
@@ -202,6 +247,12 @@ class BlueSquareNode: SKSpriteNode {
             let repeatForeverAction = SKAction.repeatForever(fullSequenceAction)
             
             emissionNode.run(repeatForeverAction)
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let sector = self.sector {
+            earthSpriteNode?.openDetailsSector(chosenSector: sector)
         }
     }
 }

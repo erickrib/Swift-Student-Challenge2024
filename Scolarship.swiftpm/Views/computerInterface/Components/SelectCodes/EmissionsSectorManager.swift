@@ -24,13 +24,13 @@ class EmissionSectorManager:ObservableObject {
 enum SectorInstance:CaseIterable {
     case industry
     case energy
-    case deforestation
     case transport
     case agriculture
+    case deforestation
     
     private static var instances: [SectorInstance: EmissionSectorStrategy] = [:]
     
-    func getInstance() -> any EmissionSectorStrategy {
+    func getInstance() -> EmissionSectorStrategy {
         if let existingInstance = SectorInstance.instances[self] {
             return existingInstance
         } else {

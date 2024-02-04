@@ -42,6 +42,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
         
         for var sector in allInstances {
             sector.configuration.reductionTarget = co2Difference * sector.configuration.percentageEmission
+            sector.configuration.currentCO2Nodes = sector.configuration.initialCO2Nodes
         }
                 
         for code in actions{
@@ -59,16 +60,29 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
         }
                 
         co2Status.current = co2Status.goal + min(71, co2Difference)
+        
         for sector in SectorInstance.allCases {
-            updateMessages(sector.getInstance())
+            
+            var instance = sector.getInstance()
+            
+            updateMessages(instance)
+            
+            if instance.configuration.reductionTarget == 0{
+                instance.configuration.currentCO2Nodes = (instance.configuration.currentCO2Nodes )/2
+                print("\(instance.configuration.name) : \(instance.configuration.currentCO2Nodes)")
+                
+            }
         }
-        updateEarthTexture()        
+        
+        updateEarthTexture()
+        updateCO2Node()
     }
     
-    func updateMessages(_ sector: any EmissionSectorStrategy) {
-        
+    func updateMessages(_ sector: EmissionSectorStrategy) {
+                
         if sector.configuration.reductionTarget == 0 {
             messages.append(Message(successMessage: "Redução de CO2 alcançada com sucesso em \(sector.configuration.name)", isSuccess:  true))
+            
         } else {
             messages.append(Message(errorMessage: "Falha na redução de CO2 em \(sector.configuration.name)", isSuccess: false))
         }
@@ -77,5 +91,9 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     
     private func updateEarthTexture() {
         NotificationCenter.default.post(name: Notification.Name("EarthTextureDidChange"), object: nil)
+    }
+    
+    private func updateCO2Node() {
+        NotificationCenter.default.post(name: Notification.Name("updateCO2Node"), object: nil)
     }
 }
