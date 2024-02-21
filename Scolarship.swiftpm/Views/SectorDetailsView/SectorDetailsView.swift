@@ -58,7 +58,7 @@ struct SectorDetailsView: View {
                     VStack(alignment: .leading){
                         Text("Emissões Atuais:")
                             .font(.headline)
-                        Text("Contribui com \(Int(emissionSectorManager.strategy.configuration.percentageEmission * 100))% das emissões globais de CO2, nesta simulação.")
+                        Text("Contribui com \(Int(emissionSectorManager.strategy.configuration.percentageEmission * 100))% das emissões globais de CO2, neste cenário.")
                             .font(.subheadline)
                             .padding(.leading, 15)
                     }

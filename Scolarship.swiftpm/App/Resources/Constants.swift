@@ -11,12 +11,13 @@ import SwiftUI
 public var SCENE_SIZE:CGSize = .zero
 
 //PLANET EARTH IMAGE
-public let PLANET = "earthSectors"
-public let PLANET_STAGE02 = "stage2"
+public let PLANET = "stage3"
+public let PLANET_STAGE02 = "earthSectors"
 
-// PLANET ATMOSPHERE
-public let ATMOSPHERE = "atmosphere"
-public let ATMOSPHERE2 = "atmosphere2"
+// PLANET ATMOSPHERE atmosphere
+public let ATMOSPHERE = "atmosphere3"
+public let ATMOSPHERE2 = "atmosphere"
 
 // CLOUD
-public let DARK_CLOUD = "darkCloud"
+public let DARK_CLOUD = "lightCloud"
+public let LIGHT_CLOUD = "halfDark"

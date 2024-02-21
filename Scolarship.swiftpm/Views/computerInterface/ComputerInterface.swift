@@ -25,7 +25,7 @@ struct ComputerInterface: View {
                             .stroke(Color.black, lineWidth: 2)
                     )
                 
-                HStack(spacing: 10){
+                HStack(spacing: 0){
                     CodeEditorView()
                     SelectCodesView(onClose: onClose)
                 }

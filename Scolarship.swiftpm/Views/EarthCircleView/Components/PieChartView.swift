@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PieChartView: View {
     @State private var slices: [(Double, Color)] = [
-        (3, .red),
-        (1, .orange)
+        (3, .orange),
+        (1, Color("pieGreen"))
     ]
     
     @EnvironmentObject var earthCircleViewModel:EarthCircleViewModel
@@ -20,12 +20,13 @@ struct PieChartView: View {
         ZStack {
             
             Circle()
-                .fill(.blue)
+                .fill(Color("PieBack"))
                 .frame(width: 152, height: 152)
             
             Text("absorption")
                 .padding(.top, 70.0)
                 .font(.system(size: 14))
+                .foregroundStyle(Color("absorption"))
             
             Canvas { context, size in
                 let donut = Path { p in
@@ -66,10 +67,12 @@ struct PieChartView: View {
             Text("\(Int(earthCircleViewModel.co2Status.current)) CO\u{2082}")
                 .font(.system(size: 18))
                 .padding(.bottom, 0)
+                .foregroundStyle(.white)
             
             Text("emission")
                 .padding(.bottom, 80.0)
                 .font(.system(size: 14))
+                .foregroundStyle(.orange)
         }
         .onChange(of: earthCircleViewModel.co2Status.current) { newValue in
             let baseReduceEmission = earthCircleViewModel.co2Status.initial - earthCircleViewModel.co2Status.goal
@@ -82,8 +85,8 @@ struct PieChartView: View {
             let newEmissionSlice = max(1, min(3, mappedValue))
 
             slices = [
-                (newEmissionSlice, .red),
-                (1, .orange)
+                (newEmissionSlice, .orange),
+                (1, Color("pieGreen"))
             ]
         }
 

@@ -45,7 +45,7 @@ class CodeEditorViewModel: ObservableObject {
     }
     
     func addLine() {
-        let emptyFunction = SustainableActionFunction(code: "", description: "", co2ReductionValue: 0, costEcoPoints: 0)
+        let emptyFunction = SustainableActionFunction(code: "", description: "", co2ReductionValue: 0, costEcoPoints: 0, colorName: "")
         
         guard let index = selectedLineIndex else {
             codeLines.append(emptyFunction)

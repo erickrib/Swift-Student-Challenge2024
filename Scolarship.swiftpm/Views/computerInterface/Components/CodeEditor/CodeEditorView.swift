@@ -34,21 +34,11 @@ struct CodeEditorView: View {
                         }
                         .padding(.all, 10.0)
                         .frame(width: 92, height: 45)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.green))
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
                     }
                     
                     Spacer()
                     
-                    HStack{
-                        Image(systemName: "leaf.fill")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                        
-                        Text("\(codeEditorViewModel.ecopoints)")
-                            .foregroundColor(Color.black)
-                    }
-                    .padding(.all, 10.0)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 }
                 .padding([.top], 25)
                 
@@ -63,6 +53,7 @@ struct CodeEditorView: View {
                             Text(codeEditorViewModel.codeLines[index].code)
                                 .font(.system(size: 28))
                                 .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2))
+                                .foregroundStyle(Color(codeEditorViewModel.codeLines[index].colorName))
                             
                             if codeEditorViewModel.selectedLineIndex == index && index > 0 {
                                 CursorView()
@@ -95,7 +86,7 @@ struct CodeEditorView: View {
             .padding([.leading, .trailing], 20)
             .frame(maxHeight: .infinity, alignment: .top)
         }
-        .frame(width: SCENE_SIZE.width * 0.49, height: SCENE_SIZE.height * 0.77)
+        .frame(width: SCENE_SIZE.width * 0.5, height: SCENE_SIZE.height * 0.77)
     }
     
     private func handleLineSelection(index: Int) {
@@ -143,6 +134,7 @@ struct BonusView: View {
             Text("//")
                 .font(.system(size: 22))
                 .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 5))
+                .foregroundStyle(Color("comment"))
 
             if bonus > 0 {
                 let percentageBonus = Int(bonus * 100)
@@ -150,6 +142,7 @@ struct BonusView: View {
                 Text("+\(percentageBonus)%")
                     .font(.system(size: 18))
                     .padding(EdgeInsets(top: 7, leading: 0, bottom: 0, trailing: 0))
+                    .foregroundStyle(Color("comment"))
             }
         }
     }

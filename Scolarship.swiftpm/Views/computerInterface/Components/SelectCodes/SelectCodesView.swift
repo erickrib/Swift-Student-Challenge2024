@@ -24,17 +24,24 @@ struct SelectCodesView: View {
                 
                 VStack{
                     
-                    HStack(spacing: 15) {
-                        Button(action: {
-                            codeEditorViewModel.addLine()
-                        }) {
-                            Text("New line")
-                                .padding(.horizontal, 60)
-                                .padding(.vertical, 15)
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                    HStack {
+                        
+                        HStack{
+                            Image(systemName: "leaf.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.green)
+                            
+                            Text("\(codeEditorViewModel.ecopoints)")
+                                .foregroundStyle(Color.green)
                         }
+                        .padding(.all, 10.0)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color("bluePrimary"))
+                        )
+                        
+                        Spacer()
                         
                         Button(action: {
                             codeEditorViewModel.removeLine()
@@ -42,7 +49,7 @@ struct SelectCodesView: View {
                             Text("Remove")
                                 .padding(.horizontal, 60)
                                 .padding(.vertical, 15)
-                                .background(Color.green)
+                                .background(Color.red)
                                 .foregroundColor(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                         }
@@ -53,10 +60,11 @@ struct SelectCodesView: View {
                     
                     Divider()
                         .frame(height: 1)
-                        .overlay(.pink)
+                        .overlay(Color("bluePrimary"))
                     
                     Text("Click on the codes to add them to your algorithm:")
                         .padding(.vertical, 25.0)
+                        .foregroundStyle(Color("bluePrimary"))
                     
                     ScrollView {
                         ForEach(emissionSectorManager.getSector().sustainableActionFunction) { function in
@@ -84,8 +92,15 @@ struct SelectCodesView: View {
                                 .resizable()
                         }
                         .frame(width: 20, height: 20)
+                        .background(
+                            Circle()
+                                .fill(Color(uiColor: .secondarySystemBackground))
+                                .frame(width: 32, height: 32)
+                        )
+                        .foregroundColor(Color("bluePrimary"))
                         .padding(.leading, 40)
-                        .padding(.bottom, 30)
+                        .padding(.top, 20)
+                        .padding(.bottom, 20)
                         
                         ForEach(SectorInstance.allCases, id: \.self){ sector in 
                             Button(action: {
@@ -95,12 +110,12 @@ struct SelectCodesView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .padding(.vertical, 10.0)
-                                    .padding(.horizontal, 15.0)
+                                    .padding(.horizontal, 5.0)
                             }
                         }
                     }
                     
-                }.frame(width: SCENE_SIZE.width * 0.082)
+                }.frame(width: SCENE_SIZE.width * 0.09)
                 
             }
             

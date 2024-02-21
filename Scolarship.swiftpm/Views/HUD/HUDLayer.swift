@@ -33,12 +33,12 @@ class HUDLayer: SKNode {
         computerButton.name = "computerButton"
         computerButton.scale(to: autoScale(computerButton, widthProportion: 0.10, screenSize: SCENE_SIZE))
         
-        //        let scaleUp = SKAction.scale(to: 1.2, duration: 1.0)
-        //        let scaleDown = SKAction.scale(to: 1.0, duration: 1.0)
-        //        let pulsate = SKAction.sequence([scaleUp, scaleDown])
-        //        let repeatPulsate = SKAction.repeatForever(pulsate)
-        //
-        //        computerButton.run(repeatPulsate)
+                let scaleUp = SKAction.scale(to: 1.0, duration: 1.0)
+        let scaleDown = SKAction.scale(to: 0.9, duration: 1.0)
+                let pulsate = SKAction.sequence([scaleUp, scaleDown])
+                let repeatPulsate = SKAction.repeatForever(pulsate)
+        
+                computerButton.run(repeatPulsate)
         
         addChild(computerButton)
     }
@@ -49,7 +49,7 @@ class HUDLayer: SKNode {
         let rectangleNode = SKNode()
         
         let rectangle = SKShapeNode(rect: CGRect(x: 0, y: 0, width: size.width * 0.12, height: 41), cornerRadius: 10)
-        rectangle.fillColor = .purple
+        rectangle.fillColor = UIColor(named: "goal") ?? .purple
         rectangleNode.position = CGPoint(x: SCENE_SIZE.width * 0.08, y: SCENE_SIZE.height * 0.9)
         
         let goalLabel = SKLabelNode(attributedText: attributedText(string: "Goal:", size: 16, weight: .medium))

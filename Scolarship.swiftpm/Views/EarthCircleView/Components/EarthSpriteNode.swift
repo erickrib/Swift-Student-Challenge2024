@@ -18,11 +18,11 @@ class EarthSpriteNode: SKSpriteNode {
         self.scale(to: autoScale(self, widthProportion: 0.6525, screenSize: SCENE_SIZE))
         
         let positionsRedSquareS: [(CGPoint, CGFloat)] = [
-            (CGPoint(x: -size.width * 0.42, y: size.height * 0.15), 60),
-            (CGPoint(x: -size.width * 0.28, y: size.height * 0.32), 40),
-            (CGPoint(x: -size.width * 0.05, y: size.height * 0.4), 0),
-            (CGPoint(x: size.width * 0.16, y: size.height * 0.37), -35),
-            (CGPoint(x: size.width * 0.35, y: size.height * 0.18), -60),
+            (CGPoint(x: -size.width * 0.4, y: size.height * 0.12), 60),
+            (CGPoint(x: -size.width * 0.28, y: size.height * 0.28), 40),
+            (CGPoint(x: -size.width * 0.03, y: size.height * 0.37), 0),
+            (CGPoint(x: size.width * 0.19, y: size.height * 0.3), -35),
+            (CGPoint(x: size.width * 0.35, y: size.height * 0.13), -60),
         ]
         
         let positionsBlueSquare: [CGPoint] = [

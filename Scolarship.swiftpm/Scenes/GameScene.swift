@@ -101,7 +101,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     private func createCloudTexture(at position: CGPoint) -> SKSpriteNode {
-        let cloudBackground = SKSpriteNode(imageNamed: "cloud")
+        let cloudBackground = SKSpriteNode(imageNamed: LIGHT_CLOUD)
         cloudBackground.position = position
         cloudBackground.scale(to: autoScale(cloudBackground, widthProportion: 0.07, screenSize: SCENE_SIZE))
         return cloudBackground
