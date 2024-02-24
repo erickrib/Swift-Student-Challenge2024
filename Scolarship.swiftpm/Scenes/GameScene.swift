@@ -23,7 +23,7 @@ class GameScene: SKScene, ObservableObject {
     private lazy var hudLayer: HUDLayer = HUDLayer(screenSize: SCENE_SIZE)
     
     lazy var atmosphereBackground: SKSpriteNode = {
-        let atmosphereBackground = SKSpriteNode(imageNamed: ATMOSPHERE)
+        let atmosphereBackground = SKSpriteNode(imageNamed: ATMOSPHERE_STAGE03)
         atmosphereBackground.position = CGPoint(x: size.width/2, y: size.height/2)
         return atmosphereBackground
     }()
@@ -101,7 +101,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     private func createCloudTexture(at position: CGPoint) -> SKSpriteNode {
-        let cloudBackground = SKSpriteNode(imageNamed: LIGHT_CLOUD)
+        let cloudBackground = SKSpriteNode(imageNamed: DARK_CLOUD)
         cloudBackground.position = position
         cloudBackground.scale(to: autoScale(cloudBackground, widthProportion: 0.07, screenSize: SCENE_SIZE))
         return cloudBackground
@@ -122,8 +122,8 @@ class GameScene: SKScene, ObservableObject {
             switch co2Percentage {
             case let p where p > 0.14:
                 earthImage.texture = SKTexture(imageNamed: PLANET_STAGE02)
-                atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE2)
-                updateCloudsTexture(textureName: DARK_CLOUD)
+                atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE_STAGE02)
+                updateCloudsTexture(textureName: HALF_DARK_CLOUD)
             default:
                 break
             }

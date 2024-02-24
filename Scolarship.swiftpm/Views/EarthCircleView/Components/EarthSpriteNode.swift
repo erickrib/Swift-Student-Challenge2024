@@ -12,17 +12,17 @@ class EarthSpriteNode: SKSpriteNode {
     var viewModel: GameSceneDelegate?
     
     init() {
-        let texture = SKTexture(imageNamed: PLANET)
+        let texture = SKTexture(imageNamed: PLANET_STAGE03)
         super.init(texture: texture, color: .clear, size: texture.size())
         self.position = CGPoint(x: SCENE_SIZE.width / 2, y: SCENE_SIZE.height / 2)
         self.scale(to: autoScale(self, widthProportion: 0.6525, screenSize: SCENE_SIZE))
         
         let positionsRedSquareS: [(CGPoint, CGFloat)] = [
-            (CGPoint(x: -size.width * 0.4, y: size.height * 0.12), 60),
-            (CGPoint(x: -size.width * 0.28, y: size.height * 0.28), 40),
-            (CGPoint(x: -size.width * 0.03, y: size.height * 0.37), 0),
-            (CGPoint(x: size.width * 0.19, y: size.height * 0.3), -35),
-            (CGPoint(x: size.width * 0.35, y: size.height * 0.13), -60),
+            (CGPoint(x: -size.width * 0.35, y: size.height * 0.12), 60),
+            (CGPoint(x: -size.width * 0.25, y: size.height * 0.25), 40),
+            (CGPoint(x: -size.width * 0.03, y: size.height * 0.33), 0),
+            (CGPoint(x: size.width * 0.191, y: size.height * 0.26), -35),
+            (CGPoint(x: size.width * 0.31, y: size.height * 0.11), -65),
         ]
         
         let positionsBlueSquare: [CGPoint] = [
@@ -33,7 +33,7 @@ class EarthSpriteNode: SKSpriteNode {
         let sectors = SectorInstance.allCases
         
         for (index, (position, rotation)) in positionsRedSquareS.enumerated() {
-            let redSquareSize = CGSize(width: 50, height: 50)
+            let redSquareSize = CGSize(width: 100, height: 80)
             let redSquareNode = RedSquareNode(size: redSquareSize, rotation: rotation.degreesToRadians)
             redSquareNode.earthSpriteNode = self
             redSquareNode.position = position
@@ -66,8 +66,8 @@ class EarthSpriteNode: SKSpriteNode {
     }
     
     func openDetailsSector(chosenSector: EmissionSectorStrategy){
-        viewModel?.isSectorDetails = true
         viewModel?.chosenSector = chosenSector
+        viewModel?.isSectorDetails = true
     }
 }
 
@@ -91,6 +91,7 @@ class RedSquareNode: SKSpriteNode {
     func configureEmissionNodes() {
         for i in 0..<(sector?.configuration.currentCO2Nodes ?? 0) {
             let emissionNode = createEmissionNode(at: i)
+            emissionNode.position.y = self.size.height * 0.5
             addChild(emissionNode)
             emissionNodes.append(emissionNode)
         }
@@ -112,7 +113,7 @@ class RedSquareNode: SKSpriteNode {
         configureEmissionNodes()
         emitBlueBalls()
         
-        print("\(sector?.configuration.name) : \(sector?.configuration.currentCO2Nodes)")
+//        print("\(sector?.configuration.name) : \(sector?.configuration.currentCO2Nodes)")
     }
     
     func emitBlueBalls() {
@@ -132,7 +133,7 @@ class RedSquareNode: SKSpriteNode {
             let sequenceAction = SKAction.sequence([waitAction, fadeInAction, moveUpAction, fadeOutAction])
             
             let resetAction = SKAction.run {
-                emissionNode.position = CGPoint(x: 0, y: 0)
+                emissionNode.position = CGPoint(x: 0, y: self.size.height * 0.5)
                 emissionNode.alpha = 0.0
             }
             

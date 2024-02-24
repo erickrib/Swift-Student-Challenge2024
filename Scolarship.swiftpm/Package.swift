@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Scolarship",
+    name: "Code Carbon",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "Scolarship",
+            name: "Code Carbon",
             targets: ["AppModule"],
             bundleIdentifier: "erickribeiro.Scolarship",
             teamIdentifier: "4VHUF9729L",
@@ -29,7 +29,8 @@ let package = Package(
             supportedInterfaceOrientations: [
                 .landscapeRight,
                 .landscapeLeft
-            ]
+            ],
+            appCategory: .education
         )
     ],
     targets: [

@@ -17,7 +17,7 @@ struct CodeEditorView: View {
                 .resizable()
                 .scaledToFill()
             
-            VStack (alignment: .leading, spacing: 200){
+            VStack (alignment: .leading, spacing: 240){
                 HStack{
                     Button(action: {
                         codeEditorViewModel.runCode()
@@ -51,9 +51,9 @@ struct CodeEditorView: View {
                             }
                             
                             Text(codeEditorViewModel.codeLines[index].code)
-                                .font(.system(size: 28))
+                                .font(.system(size: 22))
                                 .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2))
-                                .foregroundStyle(Color(codeEditorViewModel.codeLines[index].colorName))
+                                .foregroundStyle(Color(codeEditorViewModel.codeLines[index].colorCode))
                             
                             if codeEditorViewModel.selectedLineIndex == index && index > 0 {
                                 CursorView()
@@ -70,7 +70,7 @@ struct CodeEditorView: View {
                             Spacer()
                         }
                         .padding(.leading, 5)
-                        .background(codeEditorViewModel.selectedLineIndex == index ? Color.blue.opacity(0.3) : Color.clear)
+                        .background(codeEditorViewModel.selectedLineIndex == index ? Color("selectCode") : Color.clear)
                         .contentShape(Rectangle())
                         .onTapGesture { location in
                             handleLineSelection(index: index)

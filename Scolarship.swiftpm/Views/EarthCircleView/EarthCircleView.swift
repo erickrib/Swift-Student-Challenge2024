@@ -41,6 +41,9 @@ struct EarthCircleView: View {
                 if earthCircleViewModel.isSectorDetails {
                     SectorDetailsView(onClose: {
                         earthCircleViewModel.isSectorDetails = false
+                        earthCircleViewModel.chosenSector = nil
+                        
+                        return Void()
                     }, sector: earthCircleViewModel.chosenSector
                     )
                 }

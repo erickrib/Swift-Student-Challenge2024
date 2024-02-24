@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SectorDetailsView: View {
     
-    @EnvironmentObject var emissionSectorManager: EmissionSectorManager
     var onClose: () -> Void?
     var sector: EmissionSectorStrategy?
     
@@ -18,7 +17,7 @@ struct SectorDetailsView: View {
             VStack {
                 HStack {
                     HStack{
-                        Text(emissionSectorManager.strategy.configuration.name)
+                        Text(sector?.configuration.name ?? "")
                             .font(.title2.bold())
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -27,7 +26,6 @@ struct SectorDetailsView: View {
                     
                     Button {
                         onClose()
-                        emissionSectorManager.strategy = SectorInstance.industry.getInstance()
                     } label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -43,22 +41,23 @@ struct SectorDetailsView: View {
                 .padding(.top, 15)
                 .padding(.bottom, 10)
                 
-                Image("modalBackground")
+                let width = ImageWidth.width(forName: sector?.configuration.name ?? "")
+
+                Image(sector?.configuration.imageDescription ?? "")
                     .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: 200, maxHeight: 200)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: width)                
                 
-                
-                Text(emissionSectorManager.strategy.configuration.description)
+                Text(sector?.configuration.description ?? "")
                     .font(.body)
                     .multilineTextAlignment(.center)
-                    .padding(.vertical, 30)
+                    .padding(.vertical, 10)
                 
                 HStack{
                     VStack(alignment: .leading){
                         Text("Emissões Atuais:")
                             .font(.headline)
-                        Text("Contribui com \(Int(emissionSectorManager.strategy.configuration.percentageEmission * 100))% das emissões globais de CO2, neste cenário.")
+                        Text("Contribui com \(Int((sector?.configuration.percentageEmission ?? 0) * 100))% das emissões globais de CO\u{2082}, neste cenário.")
                             .font(.subheadline)
                             .padding(.leading, 15)
                     }
@@ -69,9 +68,9 @@ struct SectorDetailsView: View {
                 
                 HStack{
                     VStack(alignment: .leading){
-                        Text("Meta de Redução de CO2:")
+                        Text("Meta de Redução de CO\u{2082}:")
                             .font(.headline)
-                        Text("Reduzir as emissões em \(Int(emissionSectorManager.strategy.configuration.reductionTarget ?? 0))CO2.")
+                        Text("Reduzir as emissões em \(Int(sector?.configuration.reductionTarget ?? 0))CO\u{2082}.")
                             .font(.subheadline)
                             .padding(.leading, 15)
                     }
@@ -98,11 +97,28 @@ struct SectorDetailsView: View {
                     
                 }
         )
-        .onAppear{
-            if let sectorModal = self.sector{
-                emissionSectorManager.strategy = sectorModal
-            }
-        }
     }
 }
 
+enum ImageWidth: CGFloat {
+    case small = 50
+    case medium = 130
+    case large = 300
+    
+    static func width(forName name: String) -> CGFloat {
+        switch name {
+        case "Industry":
+            return ImageWidth.medium.rawValue
+        case "Energy":
+            return ImageWidth.medium.rawValue
+        case "Transport":
+            return ImageWidth.medium.rawValue
+        case "Agriculture":
+            return ImageWidth.medium.rawValue
+        case "Deforestation":
+            return ImageWidth.large.rawValue
+        default:
+            return ImageWidth.medium.rawValue
+        }
+    }
+}

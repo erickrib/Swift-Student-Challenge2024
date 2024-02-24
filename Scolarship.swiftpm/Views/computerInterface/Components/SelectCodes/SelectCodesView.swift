@@ -14,6 +14,8 @@ struct SelectCodesView: View {
     
     var onClose: () -> Void?
     
+    @State private var scaleEffects = [UUID: Double]()
+
     var body: some View {
         ZStack{
             Image("backgroundListCode")
@@ -69,7 +71,17 @@ struct SelectCodesView: View {
                     ScrollView {
                         ForEach(emissionSectorManager.getSector().sustainableActionFunction) { function in
                             ExecutableCardCodeView(sustainableActionFunction: function, disable: codeEditorViewModel.ecopoints < function.costEcoPoints)
+                                .scaleEffect(scaleEffects[function.id, default: 1.0])
                                 .onTapGesture {
+                                    
+                                    withAnimation(.easeIn(duration: 0.15)) {
+                                        self.scaleEffects[function.id] = 0.95
+                                    }
+                                    
+                                    withAnimation(.easeOut(duration: 0.15).delay(0.2)) {
+                                        self.scaleEffects[function.id] = 1.0
+                                    }
+                                    
                                     codeEditorViewModel.addFunction(action: function)
                                 }
                                 .disabled(codeEditorViewModel.ecopoints < function.costEcoPoints)
@@ -96,13 +108,14 @@ struct SelectCodesView: View {
                             Circle()
                                 .fill(Color(uiColor: .secondarySystemBackground))
                                 .frame(width: 32, height: 32)
+                                .shadow(color: Color.black, radius: 2, x: 0, y: 1)
                         )
                         .foregroundColor(Color("bluePrimary"))
                         .padding(.leading, 40)
                         .padding(.top, 20)
                         .padding(.bottom, 20)
                         
-                        ForEach(SectorInstance.allCases, id: \.self){ sector in 
+                        ForEach(SectorInstance.allCases, id: \.self){ sector in
                             Button(action: {
                                 emissionSectorManager.strategy = sector.getInstance()
                             }){

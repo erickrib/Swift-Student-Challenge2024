@@ -19,6 +19,7 @@ struct EmissionSectors:Identifiable, Equatable {
     
     var name:String
     var iconName:String
+    var imageDescription:String
     
     var percentageEmission: Double
     var reductionTarget: Double?
@@ -38,6 +39,7 @@ struct SustainableActionFunction:Identifiable, Equatable {
     var co2ReductionValue: Double
     var costEcoPoints:Int
     var colorName:String
+    var colorCode:String
     
     var bonus: Double = 0.0
 }
