@@ -8,30 +8,29 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Scolarship",
+    name: "Code Carbon",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "Scolarship",
+            name: "Code Carbon",
             targets: ["AppModule"],
             bundleIdentifier: "erickribeiro.Scolarship",
             teamIdentifier: "4VHUF9729L",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .flower),
-            accentColor: .presetColor(.red),
+            appIcon: .asset("AppIcon"),
+            accentColor: .asset("AccentColor"),
             supportedDeviceFamilies: [
                 .pad,
                 .phone
             ],
             supportedInterfaceOrientations: [
-                .portrait,
                 .landscapeRight,
-                .landscapeLeft,
-                .portraitUpsideDown(.when(deviceFamilies: [.pad]))
-            ]
+                .landscapeLeft
+            ],
+            appCategory: .education
         )
     ],
     targets: [
