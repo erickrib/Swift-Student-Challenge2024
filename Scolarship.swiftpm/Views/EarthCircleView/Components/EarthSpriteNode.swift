@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  EarthSpriteNode.swift
 //
 //
 //  Created by Erick Ribeiro on 31/01/24.
@@ -17,7 +17,8 @@ class EarthSpriteNode: SKSpriteNode {
         self.position = CGPoint(x: SCENE_SIZE.width / 2, y: SCENE_SIZE.height / 2)
         self.scale(to: autoScale(self, widthProportion: 0.6525, screenSize: SCENE_SIZE))
         
-        let positionsRedSquareS: [(CGPoint, CGFloat)] = [
+        // Position emission node group
+        var positionsRedSquareS: [(CGPoint, CGFloat)] = [
             (CGPoint(x: -size.width * 0.35, y: size.height * 0.12), 60),
             (CGPoint(x: -size.width * 0.25, y: size.height * 0.25), 40),
             (CGPoint(x: -size.width * 0.03, y: size.height * 0.33), 0),
@@ -25,15 +26,42 @@ class EarthSpriteNode: SKSpriteNode {
             (CGPoint(x: size.width * 0.31, y: size.height * 0.11), -65),
         ]
         
-        let positionsBlueSquare: [CGPoint] = [
+        // Position absorption node group
+        var positionsBlueSquare: [CGPoint] = [
             CGPoint(x: -size.width * 0.28, y: -size.height * 0.22),
             CGPoint(x: size.width * 0.24, y: -size.height * 0.22)
         ]
         
-        let sectors = SectorInstance.allCases
+        // Group of modified position nodes
+        var modifiedPositionsRedSquareS: [(CGPoint, CGFloat)] = []
+        var modifiedPositionsBlueSquareS: [CGPoint] = []
+
+        if SCENE_SIZE.width > 1300 {
+            for position in positionsRedSquareS {
+                let modifiedPosition: (CGPoint, CGFloat)
+            
+                modifiedPosition = (CGPoint(x: position.0.x * 0.9, y: position.0.y * 0.9), position.1)
+                
+                modifiedPositionsRedSquareS.append(modifiedPosition)
+            }
+            
+            for position in positionsBlueSquare {
+                let modifiedPosition: CGPoint
+            
+                modifiedPosition = CGPoint(x: position.x * 0.9, y: position.y * 0.9)
+                
+                modifiedPositionsBlueSquareS.append(modifiedPosition)
+            }
+            
+            positionsRedSquareS = modifiedPositionsRedSquareS
+            positionsBlueSquare = modifiedPositionsBlueSquareS
+
+        }
         
+        // Creation of co2 emission animation
+        let sectors = SectorInstance.allCases
         for (index, (position, rotation)) in positionsRedSquareS.enumerated() {
-            let redSquareSize = CGSize(width: 100, height: 80)
+            let redSquareSize = CGSize(width: size.width * 0.128, height: size.height * 0.108)
             let redSquareNode = RedSquareNode(size: redSquareSize, rotation: rotation.degreesToRadians)
             redSquareNode.earthSpriteNode = self
             redSquareNode.position = position
@@ -45,11 +73,11 @@ class EarthSpriteNode: SKSpriteNode {
 
         }
         
+        // Creation of co2 absorption animation
         let absorbs:[EmissionSectorStrategy] = [OceanAbsorb(), ForestsAbsorb()]
-        
         for (index, position) in positionsBlueSquare.enumerated() {
             let blueSquareSize = CGSize(width: 250, height: 50)
-            let rotation: CGFloat = index > 0 ? -CGFloat.pi / 1.3 : CGFloat.pi / 1.3
+            let rotation: CGFloat = index > 0 ? -CGFloat.pi / 1.4 : CGFloat.pi / 1.3
             
             let blue = BlueSquareNode(size: blueSquareSize, rotation: rotation)
             blue.position = position
@@ -65,6 +93,7 @@ class EarthSpriteNode: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // open modal sector details
     func openDetailsSector(chosenSector: EmissionSectorStrategy){
         viewModel?.chosenSector = chosenSector
         viewModel?.isSectorDetails = true
@@ -99,7 +128,7 @@ class RedSquareNode: SKSpriteNode {
     
     private func createEmissionNode(at index: Int) -> SKShapeNode {
         let emissionNode = SKShapeNode(circleOfRadius: 3)
-        emissionNode.fillColor = .blue
+        emissionNode.fillColor = UIColor(named: "carbon") ?? .orange
         emissionNode.alpha = 0.0
         
         return emissionNode
@@ -112,10 +141,9 @@ class RedSquareNode: SKSpriteNode {
         emissionNodes.removeAll()
         configureEmissionNodes()
         emitBlueBalls()
-        
-//        print("\(sector?.configuration.name) : \(sector?.configuration.currentCO2Nodes)")
     }
     
+    // CO2 emission animation
     func emitBlueBalls() {
         for (index, emissionNode) in emissionNodes.enumerated() {
             let orderedIndex = generateRandomIndices(count: emissionNodes.count)[index]
@@ -211,7 +239,7 @@ class BlueSquareNode: SKSpriteNode {
     
     func createEmissionNode(at index: Int) -> SKShapeNode {
         let emissionNode = SKShapeNode(circleOfRadius: 3)
-        emissionNode.fillColor = .blue
+        emissionNode.fillColor = UIColor(named: "carbon") ?? .orange
         
         let radius: CGFloat = 200
         let centerX: CGFloat = -size.width * 0.1
@@ -228,6 +256,7 @@ class BlueSquareNode: SKSpriteNode {
         return emissionNode
     }
     
+    // co2 absorption animation
     func emitBlueBalls() {
         for (index, emissionNode) in emissionNodes.enumerated() {
             let moveUpAction = SKAction.moveBy(x: 0, y: -self.size.height * 2, duration: 5.0)
@@ -248,12 +277,6 @@ class BlueSquareNode: SKSpriteNode {
             let repeatForeverAction = SKAction.repeatForever(fullSequenceAction)
             
             emissionNode.run(repeatForeverAction)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let sector = self.sector {
-            earthSpriteNode?.openDetailsSector(chosenSector: sector)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ComputerInterface.swift
 //
 //
 //  Created by Erick Ribeiro on 21/01/24.
@@ -30,7 +30,7 @@ struct ComputerInterface: View {
                     SelectCodesView(onClose: onClose)
                 }
             }
-            .frame(width: SCENE_SIZE.width * 0.95, height: SCENE_SIZE.height * 0.84)
+            .frame(width: SCENE_SIZE.width > 1300 ? SCENE_SIZE.width * 0.90 : SCENE_SIZE.width * 0.95, height:SCENE_SIZE.width > 1300 ? SCENE_SIZE.height * 0.8 : SCENE_SIZE.height * 0.84)
             .background(.clear)
 
         }

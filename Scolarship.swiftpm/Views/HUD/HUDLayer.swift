@@ -1,16 +1,16 @@
 //
-//  File.swift
+//  HUDLayer.swift
 //
 //
 //  Created by Erick Ribeiro on 21/01/24.
 //
 
 import SpriteKit
-import SwiftUI
 
 class HUDLayer: SKNode {
     
     weak var delegate: ModalPresenter?
+    let buttonNode = SKShapeNode(rectOf: CGSize(width: 160, height: 40), cornerRadius: 5)
     
     init(screenSize: CGSize) {
         super.init()
@@ -19,7 +19,7 @@ class HUDLayer: SKNode {
         createGoalCO2Rectangle(size: screenSize)
         createQuestionButton(size: screenSize)
         createPulsatingWaves(size: screenSize)
-        
+        createButton(size: screenSize)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,13 +77,11 @@ class HUDLayer: SKNode {
         let questionButton = SKSpriteNode(imageNamed: "doubt")
         questionButton.position = CGPoint(x: SCENE_SIZE.width * 0.93, y: SCENE_SIZE.height * 0.91)
         questionButton.name = "questionButton"
-        questionButton.isUserInteractionEnabled = true
         
-        let questionMarkLabel = SKLabelNode(text: "?")
-        questionMarkLabel.fontSize = 24
+        let questionMarkLabel = SKLabelNode(attributedText: attributedText(string: "?", size: 24, weight: .bold))
         questionMarkLabel.fontColor = .white
-        questionMarkLabel.fontName = UIFont.boldSystemFont(ofSize: 16.0).fontName
         questionMarkLabel.position = CGPoint(x: 0, y: -7)
+        questionMarkLabel.name = "questionButton"
         
         questionButton.addChild(questionMarkLabel)
         addChild(questionButton)
@@ -101,18 +99,32 @@ class HUDLayer: SKNode {
         return attributedText
     }
     
+    private func createButton(size: CGSize)  {
+        buttonNode.position = CGPoint(x: size.width * 0.88, y: size.height * 0.32)
+        buttonNode.fillColor = UIColor(named: "bluePrimary") ?? .blue
+        buttonNode.name = "restore"
+
+        let labelNode = SKLabelNode(attributedText: attributedText(string: "Restore Scenario", size: 18, weight: .medium))
+        labelNode.fontColor = .white
+        labelNode.position = CGPoint(x: 0, y: -7)
+        labelNode.name = "restoreText"
+
+        buttonNode.addChild(labelNode)
+        buttonNode.isHidden = true
+        
+        addChild(buttonNode)
+    }
+    
     func createPulsatingWaves(size: CGSize) {
-        // Criar múltiplos nós para as ondas pulsantes
         for i in 0..<3 {
-            let delay = Double(i) * 0.2 // Atraso entre cada onda
-            let pulseDuration = 1.5 // Duração da pulsação
+            let delay = Double(i) * 0.2
+            let pulseDuration = 1.5
             
             let waveNode = SKShapeNode(circleOfRadius: 50)
             waveNode.fillColor = UIColor(named: "pulseAnimation") ?? .gray
             waveNode.position = CGPoint(x: size.width * 0.88, y: size.height * 0.13)
             addChild(waveNode)
             
-            // Configurar a escala inicial e final para criar a pulsação
             let scaleOutAction = SKAction.scale(to: 2.0, duration: pulseDuration)
             let fadeOutAction = SKAction.fadeOut(withDuration: pulseDuration)
             let groupOutAction = SKAction.group([scaleOutAction, fadeOutAction])
@@ -121,23 +133,21 @@ class HUDLayer: SKNode {
             let fadeInAction = SKAction.fadeIn(withDuration: 0)
             let groupInAction = SKAction.group([scaleInAction, fadeInAction])
             
-            // Sequência de ações para cada onda
             let pulseSequence = SKAction.sequence([
                 SKAction.wait(forDuration: delay),
                 groupOutAction,
                 SKAction.run {
-                    waveNode.isHidden = true // Ocultar o nó temporariamente
+                    waveNode.isHidden = true
                 },
-                SKAction.wait(forDuration: 1), // Tempo de espera antes de mostrar o nó novamente
+                SKAction.wait(forDuration: 1),
                 SKAction.run {
-                    waveNode.isHidden = false // Mostrar o nó novamente
+                    waveNode.isHidden = false
                 },
                 groupInAction
             ])
             
-            // Executar a sequência de pulsação
             waveNode.run(SKAction.repeatForever(pulseSequence))
         }
     }
-
+    
 }

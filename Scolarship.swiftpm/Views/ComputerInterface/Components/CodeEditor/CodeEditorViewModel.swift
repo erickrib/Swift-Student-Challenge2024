@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CodeEditorViewModel.swift
 //
 //
 //  Created by Erick Ribeiro on 23/01/24.
@@ -14,7 +14,7 @@ class CodeEditorViewModel: ObservableObject {
     @Published var selectedLineIndex: Int?
     @Published var touchPosition: CGFloat = 0.8
     
-    @Published var ecopoints: Int = 30
+    @Published var ecopoints: Int = 60
     var earthCircleViewModel: EarthCircleViewModel?
     
     func addFunction(action:SustainableActionFunction) {
@@ -43,29 +43,6 @@ class CodeEditorViewModel: ObservableObject {
         
         updateCustomValues()
     }
-    
-    func addLine() {
-        let emptyFunction = SustainableActionFunction(code: "", description: "", co2ReductionValue: 0, costEcoPoints: 0, colorName: "", colorCode: "")
-        
-        guard let index = selectedLineIndex else {
-            codeLines.append(emptyFunction)
-            selectedLineIndex = codeLines.count - 1
-            
-            return
-        }
-        
-        if !(codeLines[index].code == "") {
-            
-            if touchPosition < 0.3 && index == 0 {
-                codeLines.insert(emptyFunction, at: index)
-                selectedLineIndex = index
-            } else {
-                codeLines.insert(emptyFunction, at: index + 1)
-                selectedLineIndex = index + 1
-            }
-        }
-    }
-    
     
     func removeLine() {
         
@@ -98,6 +75,8 @@ class CodeEditorViewModel: ObservableObject {
             let bonusPercentual: [Double] = [0.25, 0.20, 0.15, 0.10, 0.05, 0.03, 0.02]
             if index <= bonusPercentual.count - 1{
                 codeLines[index].bonus = bonusPercentual[index]
+            } else {
+                codeLines[index].bonus = 0
             }
         }
     }

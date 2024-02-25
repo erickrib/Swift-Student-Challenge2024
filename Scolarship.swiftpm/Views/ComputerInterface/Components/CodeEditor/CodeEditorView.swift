@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CodeEditorView.swift
 //
 //
 //  Created by Erick Ribeiro on 22/01/24.
@@ -10,6 +10,7 @@ import SwiftUI
 struct CodeEditorView: View {
     
     @EnvironmentObject var codeEditorViewModel: CodeEditorViewModel
+    @State private var presentAlert = false
     
     var body: some View {
         ZStack{
@@ -17,9 +18,13 @@ struct CodeEditorView: View {
                 .resizable()
                 .scaledToFill()
             
-            VStack (alignment: .leading, spacing: 240){
+            VStack (alignment: .leading, spacing: SCENE_SIZE.width > 1300 ? 290 : 240){
                 HStack{
                     Button(action: {
+                        if codeEditorViewModel.codeLines.isEmpty {
+                            presentAlert = true
+                            return
+                        }
                         codeEditorViewModel.runCode()
                     }){
                         HStack {
@@ -85,10 +90,17 @@ struct CodeEditorView: View {
             }
             .padding([.leading, .trailing], 20)
             .frame(maxHeight: .infinity, alignment: .top)
+            .alert("Please, select at least one sustainable action", isPresented: $presentAlert, actions: {
+            }, message: {
+                Text("To proceed, select sustainable actions available in each sector.")
+            })
         }
         .frame(width: SCENE_SIZE.width * 0.5, height: SCENE_SIZE.height * 0.77)
     }
     
+    // MARK: - Private Functions
+
+    // Handles the selection of a code line.
     private func handleLineSelection(index: Int) {
         codeEditorViewModel.codeLines = codeEditorViewModel.codeLines.filter { !$0.code.isEmpty }
         if index >= codeEditorViewModel.codeLines.count{
@@ -98,6 +110,7 @@ struct CodeEditorView: View {
         }
     }
     
+    // Measures the width of the given text.
     private func measureTextWidth(text: String, fontSize: CGFloat) -> CGFloat {
             let font = UIFont.systemFont(ofSize: fontSize)
             let attributes = [NSAttributedString.Key.font: font]

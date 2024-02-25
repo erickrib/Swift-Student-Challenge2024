@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  ExecutableCardCodeView.swift
 //  
 //
 //  Created by Erick Ribeiro on 22/01/24.
@@ -35,8 +35,9 @@ struct ExecutableCardCodeView: View {
                 HStack{
                     Spacer()
                     Text("-\(Int(sustainableActionFunction.co2ReductionValue)) CO\u{2082}")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .padding(.trailing, 10.0)
+                        .padding(.top, 5.0)
                 }
 
             }

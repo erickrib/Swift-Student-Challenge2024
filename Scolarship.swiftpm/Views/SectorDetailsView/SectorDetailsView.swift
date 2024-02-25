@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SectorDetailsView.swift
 //
 //
 //  Created by Erick Ribeiro on 02/02/24.
@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SectorDetailsView: View {
     
-    var onClose: () -> Void?
+    @EnvironmentObject var earthCircleViewModel:EarthCircleViewModel
     var sector: EmissionSectorStrategy?
     
     var body: some View {
@@ -19,13 +19,15 @@ struct SectorDetailsView: View {
                     HStack{
                         Text(sector?.configuration.name ?? "")
                             .font(.title2.bold())
+                            .foregroundStyle(.black)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                     
                     Spacer()
                     
                     Button {
-                        onClose()
+                        earthCircleViewModel.isSectorDetails = false
+                        earthCircleViewModel.chosenSector = nil
                     } label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -42,11 +44,11 @@ struct SectorDetailsView: View {
                 .padding(.bottom, 10)
                 
                 let width = ImageWidth.width(forName: sector?.configuration.name ?? "")
-
+                
                 Image(sector?.configuration.imageDescription ?? "")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: width)                
+                    .frame(width: width)
                 
                 Text(sector?.configuration.description ?? "")
                     .font(.body)
@@ -55,12 +57,13 @@ struct SectorDetailsView: View {
                 
                 HStack{
                     VStack(alignment: .leading){
-                        Text("Emissões Atuais:")
+                        Text("Current Emissions:")
                             .font(.headline)
-                        Text("Contribui com \(Int((sector?.configuration.percentageEmission ?? 0) * 100))% das emissões globais de CO\u{2082}, neste cenário.")
+                        Text("Contributes \(Int((sector?.configuration.percentageEmission ?? 0) * 100))% of global de CO\u{2082} emissions in this scenario.")
                             .font(.subheadline)
                             .padding(.leading, 15)
                     }
+                    .foregroundStyle(.black)
                     
                     Spacer()
                 }
@@ -68,17 +71,56 @@ struct SectorDetailsView: View {
                 
                 HStack{
                     VStack(alignment: .leading){
-                        Text("Meta de Redução de CO\u{2082}:")
+                        Text("CO\u{2082} Reduction Goal:")
                             .font(.headline)
-                        Text("Reduzir as emissões em \(Int(sector?.configuration.reductionTarget ?? 0))CO\u{2082}.")
-                            .font(.subheadline)
+                        
+                        if let reductionTarget = sector?.configuration.reductionTarget, reductionTarget != 0 {
+                            let formattedString = String(format: "%.1f", reductionTarget).replacingOccurrences(of: ".", with: ",")
+                            Text("Reduce emissions by \(formattedString) CO\u{2082}.")
+                                .font(.subheadline)
+                                .padding(.leading, 15)
+                            
+                            HStack {
+                                Image(systemName: "xmark.circle")
+                                    .foregroundStyle(.white)
+                                
+                                Text("Pending Goal")
+                                    .font(.caption)
+                                    .foregroundStyle(.white)
+                                
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 5)
+                            .background(.red)
+                            .cornerRadius(10)
                             .padding(.leading, 15)
+                        } else {
+                            Text("Reduce emissions by 0 CO\u{2082}.")
+                                .font(.subheadline)
+                                .padding(.leading, 15)
+                            
+                            HStack {
+                                Image(systemName: "checkmark.circle")                                .foregroundStyle(.white)
+                                
+                                Text("Completed Goal")
+                                    .font(.caption)
+                                    .foregroundStyle(.white)
+                                
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 5)
+                            .background(.green)
+                            .cornerRadius(10)
+                            .padding(.leading, 15)
+                        }
+                        
                     }
+                    .foregroundStyle(.black)
                     
                     Spacer()
                 }
                 .padding(.bottom, 20)
-
+                
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 20)
@@ -94,7 +136,8 @@ struct SectorDetailsView: View {
                 .opacity(0.5)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
-                    
+                    earthCircleViewModel.isSectorDetails = false
+                    earthCircleViewModel.chosenSector = nil
                 }
         )
     }

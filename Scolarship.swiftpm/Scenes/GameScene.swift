@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GameScene.swift
 //
 //
 //  Created by Erick Ribeiro on 06/12/23.
@@ -14,6 +14,7 @@ protocol ModalPresenter: AnyObject {
 
 class GameScene: SKScene, ObservableObject {
     
+    // MARK: - Properties
     
     private lazy var pieChartView: PieChartView = {
         let pieChartView = PieChartView()
@@ -54,6 +55,8 @@ class GameScene: SKScene, ObservableObject {
     
     var viewModel: GameSceneDelegate? = nil
     
+    // MARK: - Lifecycle
+
     override func didMove(to view: SKView) {
         
         addChild(atmosphereBackground)
@@ -66,13 +69,15 @@ class GameScene: SKScene, ObservableObject {
         
         setupPieChartView()
         
-        self.backgroundColor = .white
+        self.backgroundColor = UIColor(named: "background") ?? .white
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateEarthImage), name: Notification.Name("EarthTextureDidChange"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateRedSquareNode), name: Notification.Name("updateCO2Node"), object: nil)
 
     }
     
+    // MARK: - Additional Methods
+
     private func setupPieChartView() {
         let pieChartConvert = UIHostingController(rootView: AnyView(pieChartView))
         addHostingController(to: pieChartConvert)
@@ -120,10 +125,19 @@ class GameScene: SKScene, ObservableObject {
            let goalCO2 = viewModel?.co2Status.goal {
             let co2Percentage = (currentCO2 - goalCO2) / (initialCO2 - goalCO2)
             switch co2Percentage {
-            case let p where p > 0.14:
+            case let p where p >= 0.67:
+                earthImage.texture = SKTexture(imageNamed: PLANET_STAGE03)
+                atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE_STAGE03)
+                updateCloudsTexture(textureName: DARK_CLOUD)
+            case let p where p > 0 && p < 0.67:
                 earthImage.texture = SKTexture(imageNamed: PLANET_STAGE02)
                 atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE_STAGE02)
                 updateCloudsTexture(textureName: HALF_DARK_CLOUD)
+            case let p where p <= 0:
+                earthImage.texture = SKTexture(imageNamed: PLANET_STAGE01)
+                atmosphereBackground.texture = SKTexture(imageNamed: ATMOSPHERE_STAGE01)
+                updateCloudsTexture(textureName: LIGHT_CLOUD)
+                hudLayer.buttonNode.isHidden = false
             default:
                 break
             }
@@ -140,6 +154,8 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
+    // MARK: - Touch Handling
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -148,9 +164,24 @@ class GameScene: SKScene, ObservableObject {
             if node.name == "computerButton" {
                 viewModel?.isComputerInterfaceVisible.toggle()
             } else if node.name == "questionButton" {
+                viewModel?.isDoubt.toggle()
+            } else if node.name == "restore" || node.name == "restoreText" {
+                viewModel?.changeCO2Status(actions: [])
                 
-            } else if node.name == "overlay" {
+                let scaleUpAction = SKAction.scale(to: 1.1, duration: 0.15)
+                let scaleDownAction = SKAction.scale(to: 1.0, duration: 0.15)
+                let scaleSequence = SKAction.sequence([scaleUpAction, scaleDownAction])
+                if node.name == "restoreText" {
+                    node.parent?.run(scaleSequence){
+                        node.parent?.removeAllActions()
+                    }
+                } else {
+                    node.run(scaleSequence) {
+                        node.removeAllActions()
+                    }
+                }
                 
+                hudLayer.buttonNode.isHidden = true
             }
         }
     }

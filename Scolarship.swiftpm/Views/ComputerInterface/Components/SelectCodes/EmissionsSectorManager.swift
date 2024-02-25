@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  EmissionSectorManager.swift
 //
 //
 //  Created by Erick Ribeiro on 25/01/24.
@@ -7,6 +7,8 @@
 
 import Foundation
 import SpriteKit
+
+// MARK: - Emission Sector Manager
 
 class EmissionSectorManager:ObservableObject {
     
@@ -16,10 +18,13 @@ class EmissionSectorManager:ObservableObject {
         self.strategy = strategy
     }
     
+    // Get the emission sector associated with the current strategy.
     func getSector() -> EmissionSectors {
         self.strategy.configuration
     }
 }
+
+// MARK: - Sector Instance
 
 enum SectorInstance:CaseIterable {
     case industry
@@ -30,6 +35,7 @@ enum SectorInstance:CaseIterable {
     
     private static var instances: [SectorInstance: EmissionSectorStrategy] = [:]
     
+    // Get a singleton instance of the emission sector strategy associated with this case.
     func getInstance() -> EmissionSectorStrategy {
         if let existingInstance = SectorInstance.instances[self] {
             return existingInstance
@@ -40,6 +46,7 @@ enum SectorInstance:CaseIterable {
         }
     }
     
+    // Create a new instance of the emission sector strategy associated with this case.
     private func createInstance() -> EmissionSectorStrategy {
         switch self {
         case .industry:
@@ -55,6 +62,7 @@ enum SectorInstance:CaseIterable {
         }
     }
     
+    // Get all singleton instances of emission sector strategies.
     static func getAllInstances() -> [EmissionSectorStrategy] {
         return instances.values.map { $0 }
     }

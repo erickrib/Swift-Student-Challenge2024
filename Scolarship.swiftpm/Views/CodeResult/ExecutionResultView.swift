@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  ExecutionResultView.swift
 //
 //
 //  Created by Erick Ribeiro on 22/01/24.
@@ -9,9 +9,12 @@ import SwiftUI
 
 struct ExecutionResultView: View {
     
+    @EnvironmentObject var earthCircleViewModel:EarthCircleViewModel
+
     var messages:[Message]
     var co2Status:CO2Status
-    var onClose: () -> Void?
+    
+    @State var allSuccessMessages: Bool = false
     
     var body: some View {
         ZStack{
@@ -21,13 +24,31 @@ struct ExecutionResultView: View {
                         Text("Execution Result:")
                             .font(.title3.bold())
                         
-                        Text("\(Int(co2Status.initial))CO\u{2082}    ->     \(Int(co2Status.current))CO\u{2082}" )
+                        let formattedInitial = String(format: "%.1f", co2Status.initial).replacingOccurrences(of: ".", with: ",")
+                        let formattedCurrent = String(format: "%.1f", co2Status.current).replacingOccurrences(of: ".", with: ",")
+                        HStack(spacing: 20){
+                            VStack(alignment: .center){
+                                Text("Previous")
+                                    .font(.system(size: 16, weight: .bold))
+                                
+                                Text("\(formattedInitial) CO\u{2082}")
+                            }
+                            Text("->")
+                            VStack(alignment: .center){
+                                Text("Now")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundStyle(.blue)
+                                
+                                Text("\(formattedCurrent) CO\u{2082}")
+                            }
+                        }
                     }
                     
                     Spacer()
                     
                     Button {
-                        onClose()
+                        earthCircleViewModel.isExecutionResult = false
+                        earthCircleViewModel.messages = []
                     } label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -47,22 +68,42 @@ struct ExecutionResultView: View {
                 
                 Divider()
                 
+                if allSuccessMessages {
+                    VStack(alignment: .leading, spacing: 20){
+                        HStack{
+                            Text("Mission Complete: You've Balanced Emissions!")
+                                    .font(.title3.bold())
+                                    .foregroundStyle(Color("bluePrimary"))
+                        }.frame(maxWidth: .infinity, alignment: .center)
+                            
+                        Text("Programming is a tool for change. It allows us to create impactful solutions that drive real-world environmental progress, making it possible to help both people and the planet. In this app, you can code a better world.")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.black)
+                        
+                        Text("Together, we can continue working to address the challenges of climate change and create a better world for future generations. Thank you for being part of this journey!")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.black)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 30)
+                }
+                
                 ScrollView{
                     ForEach(messages){ message in
                         if message.isSuccess {
-                                HStack{
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundStyle(Color.green)
-                                        .frame(width: 26, height: 24)
-                                    Text(message.successMessage)
-                                }
-                                .padding(.horizontal, 30)
-                                .padding(.vertical, 10)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            HStack{
+                                Image(systemName: "checkmark.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(Color.green)
+                                    .frame(width: 26, height: 24)
+                                Text(message.successMessage)
+                            }
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             
-                                Divider()
+                            Divider()
                         } else {
                             HStack{
                                 Image(systemName: "xmark.circle.fill")
@@ -80,13 +121,30 @@ struct ExecutionResultView: View {
                         }
                     }
                 }
+                
+                Divider()
+                HStack{
+                    Button(action: {
+                        earthCircleViewModel.isExecutionResult = false
+                        earthCircleViewModel.messages = []
+                    }) {
+                        Text("View Scenario")
+                            .font(.system(size: 14))
+                            .fontWeight(.bold)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color("bluePrimary"))
+                            .cornerRadius(8)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 10)
             }
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.white)
             )
-            .frame(maxWidth: 680, maxHeight: 320)
-            .offset(y: SCENE_SIZE.height * 0.191)
+            .frame(maxWidth: 680, maxHeight: allSuccessMessages ? 700 : 435)
         }
         .frame(width: SCENE_SIZE.width, height: SCENE_SIZE.height)
         .background(
@@ -94,9 +152,18 @@ struct ExecutionResultView: View {
                 .opacity(0.5)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
-                    
+                    earthCircleViewModel.isExecutionResult = false
+                    earthCircleViewModel.messages = []
                 }
         )
+        .onAppear{
+            let allSuccess = messages.allSatisfy { $0.isSuccess }
+            if allSuccess {
+                allSuccessMessages = true
+            } else {
+                allSuccessMessages = false
+            }
+        }
     }
 }
 

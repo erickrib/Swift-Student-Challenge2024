@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  EarthCircleViewModel.swift
 //
 //
 //  Created by Erick Ribeiro on 06/12/23.
@@ -11,9 +11,10 @@ import SpriteKit
 protocol GameSceneDelegate {
     var isComputerInterfaceVisible: Bool { get set }
     var isSectorDetails:Bool { get set }
+    var isDoubt:Bool { get set }
     var co2Status:CO2Status { get set }
     var chosenSector:EmissionSectorStrategy? { get set }
-
+    func changeCO2Status(actions: [SustainableActionFunction])
 }
 
 class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
@@ -21,6 +22,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     @Published var isComputerInterfaceVisible:Bool = false
     @Published var isExecutionResult:Bool = false
     @Published var isSectorDetails = false
+    @Published var isDoubt = true
     
     @Published var co2Status:CO2Status = CO2Status()
     @Published var messages: [Message] = []
@@ -29,6 +31,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
     
     var scene:GameScene?
     
+    // Return game scene
     func getScene(size: CGSize) -> SKScene {
         let scene = GameScene(size: size)
         scene.viewModel = self
@@ -36,6 +39,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
         return scene
     }
     
+    // Changes scene co2
     func changeCO2Status(actions: [SustainableActionFunction]){
         var co2Difference = co2Status.initial - co2Status.goal
         let allInstances = SectorInstance.getAllInstances()
@@ -61,6 +65,8 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
                 
         co2Status.current = co2Status.goal + min(71, co2Difference)
         
+        messages = []
+
         for sector in SectorInstance.allCases {
             
             var instance = sector.getInstance()
@@ -68,9 +74,7 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
             updateMessages(instance)
             
             if instance.configuration.reductionTarget == 0{
-                instance.configuration.currentCO2Nodes = (instance.configuration.currentCO2Nodes )/2
-                print("\(instance.configuration.name) : \(instance.configuration.currentCO2Nodes)")
-                
+                instance.configuration.currentCO2Nodes = (instance.configuration.currentCO2Nodes )/2                
             }
         }
         
@@ -78,15 +82,14 @@ class EarthCircleViewModel: ObservableObject, GameSceneDelegate {
         updateCO2Node()
     }
     
+    // Update execution messages
     func updateMessages(_ sector: EmissionSectorStrategy) {
-                
         if sector.configuration.reductionTarget == 0 {
-            messages.append(Message(successMessage: "Redução de CO2 alcançada com sucesso em \(sector.configuration.name)", isSuccess:  true))
+            messages.append(Message(successMessage: "Successfully reduced CO\u{2082} emissions in \(sector.configuration.name).", isSuccess:  true))
             
         } else {
-            messages.append(Message(errorMessage: "Falha na redução de CO2 em \(sector.configuration.name)", isSuccess: false))
+            messages.append(Message(errorMessage: "Failed to reduce CO\u{2082} emissions in \(sector.configuration.name). You still need to reduce emissions by \(sector.configuration.reductionTarget?.formattedDoubleString() ?? "") in this sector.", isSuccess: false))
         }
-        
     }
     
     private func updateEarthTexture() {

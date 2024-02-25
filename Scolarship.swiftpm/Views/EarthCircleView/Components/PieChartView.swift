@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  PieChartView.swift
 //
 //
 //  Created by Erick Ribeiro on 07/12/23.
@@ -12,7 +12,6 @@ struct PieChartView: View {
         (3, .orange),
         (1, Color("pieGreen"))
     ]
-    
     @EnvironmentObject var earthCircleViewModel:EarthCircleViewModel
 
     
@@ -21,11 +20,11 @@ struct PieChartView: View {
             
             Circle()
                 .fill(Color("PieBack"))
-                .frame(width: 152, height: 152)
-            
+                .frame(width: SCENE_SIZE.width > 1300 ? SCENE_SIZE.width * 0.15 : SCENE_SIZE.width * 0.127, height: SCENE_SIZE.height * 0.182)
+
             Text("absorption")
-                .padding(.top, 70.0)
-                .font(.system(size: 14))
+                .padding(.top, 68.0)
+                .font(.system(size: SCENE_SIZE.width > 1300 ? 18 : 14))
                 .foregroundStyle(Color("absorption"))
             
             Canvas { context, size in
@@ -62,16 +61,17 @@ struct PieChartView: View {
             
             Circle()
                 .stroke(Color.white, lineWidth: 2)
-                .frame(width: 152, height: 152)
+                .frame(width: SCENE_SIZE.width > 1300 ? SCENE_SIZE.width * 0.15 : SCENE_SIZE.width * 0.127, height: SCENE_SIZE.height * 0.182)
+
             
             Text("\(Int(earthCircleViewModel.co2Status.current)) CO\u{2082}")
-                .font(.system(size: 18))
+                .font(.system(size: SCENE_SIZE.width > 1300 ? 20 : 18))
                 .padding(.bottom, 0)
                 .foregroundStyle(.white)
             
             Text("emission")
-                .padding(.bottom, 80.0)
-                .font(.system(size: 14))
+                .padding(.bottom, 78.0)
+                .font(.system(size: SCENE_SIZE.width > 1300 ? 18 : 14))
                 .foregroundStyle(.orange)
         }
         .onChange(of: earthCircleViewModel.co2Status.current) { newValue in
@@ -83,7 +83,8 @@ struct PieChartView: View {
             let mappedValue = 3 - 2 * normalizedValue
 
             let newEmissionSlice = max(1, min(3, mappedValue))
-
+            
+            // Updates graph value
             slices = [
                 (newEmissionSlice, .orange),
                 (1, Color("pieGreen"))
