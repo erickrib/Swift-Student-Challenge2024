@@ -13,11 +13,15 @@
 
 ## About
 
-Welcome to Code Carbon, an educational app developed for my Swift Student Challenge 2024 Submission. This app empowers users to create algorithms aimed at addressing environmental issues caused by excessive carbon emissions, leading to climate change. The goal of this application is to bring together the environment and programming.
+Welcome to Code Carbon, an educational app empowers users to create algorithms aimed at addressing environmental issues caused by excessive carbon emissions, leading to climate change. The goal of this application is to bring together the environment and programming.
+
+Imagine a world where everyone has the power to combat climate change. With our project, users can do just that. By programming algorithms to tackle environmental issues stemming from high carbon emissions, they become agents of positive change. Our interactive platform offers a visual representation of Earth, highlighting sectors with the highest carbon emissions. With a simple click, users access a coding interface on their computer, where they select functions to make these sectors more sustainable. From implementing solar energy solutions to addressing deforestation, users piece together a sequence of sustainable functions, essentially creating an algorithm for a greener planet. 
 
 Programming is a tool for change. It allows us to create impactful solutions that drive real-world environmental progress, making it possible to help both people and the planet. In this app, you can code a better world.
 
-**Used Technologies**: SwiftUI, SpriteKit.
+## Used Technologies
+
+SwiftUI, SpriteKit.
 
 ## Supported Platforms
 
@@ -36,11 +40,11 @@ Requirements: Swift Playgrounds 4.4, Xcode 15 or later
 ## Screenshots
 
 <div align="center">
-  <img src="images/Screenshot1.png" width="470">
-  <img src="images/Screenshot2.png" width="470">
-  <img src="images/Screenshot3.png" width="470">
-  <img src="images/Screenshot5png.png" width="470">
-  <img src="images/Screenshot4.png" width="470">
+  <img src="images/Screenshot1.png" width="600">
+  <img src="images/Screenshot2.png" width="600">
+  <img src="images/Screenshot3.png" width="600">
+  <img src="images/Screenshot5png.png" width="600">
+  <img src="images/Screenshot4.png" width="600">
 </div>
 
 ## Features
