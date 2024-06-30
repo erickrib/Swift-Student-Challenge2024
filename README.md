@@ -1,4 +1,4 @@
-# Swift Student Challenge 2024
+# Swift Student Challenge 2024 [Accepted]
 
 # Code Carbon
 
